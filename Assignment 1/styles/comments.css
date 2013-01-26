@@ -1,0 +1,19 @@
+.replies-container {
+	left:	30px;
+	position: relative;
+}
+
+.root-comment {
+    text-decoration:underline;
+}
+
+.reply-button {
+    color: #888888;
+    font-weight: bold;
+    padding: 0 1px;
+}
+
+.comment-box {
+    width: 300px;
+    height: 70px;
+}

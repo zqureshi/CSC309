@@ -1,7 +1,7 @@
 $(document).ready(function(){
     var createThread = function(container, commentText, isRoot) {
         var comment = jQuery('<div/>', {
-            'class': 'comment' + (isRoot ? ' root-comment' : ""),
+            'class': 'comment' + (isRoot ? ' root-comment lead' : ""),
             'text': commentText
         });
         var replyButton = jQuery('<a/>', {

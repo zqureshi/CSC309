@@ -100,7 +100,8 @@ exports.new = function(req, res) {
       id: null,
       title: topic.title,
       link: topic.link,
-      votes: 0
+      votes: 0,
+      replies: []
     }) - 1;
     topics[id].id = id;
 

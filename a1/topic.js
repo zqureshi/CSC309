@@ -15,12 +15,12 @@ var topics = [
     votes: 0,
     replies: [
       {
-        id: 0,
+        id: "0",
         text: 'Reply 1',
         votes: 0,
         replies: [
           {
-            id: 0,
+            id: "0:0",
             text: 'Reply 1.1',
             votes: 0,
             replies: []
@@ -29,7 +29,7 @@ var topics = [
       },
 
       {
-        id: 1,
+        id: "1",
         text: 'Reply 2',
         votes: 0,
         replies: []

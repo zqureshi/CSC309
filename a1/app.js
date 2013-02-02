@@ -5,7 +5,8 @@
 
 var express = require('express')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , topic = require('./topic');
 
 var app = express();
 
@@ -23,9 +24,19 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+/**
+ * Serve the application index
+ */
 app.get('/', function(req, res){
   res.sendfile(path.join(__dirname, 'public', 'index.html'));
-})
+});
+
+/**
+ * Routes for Topic REST API
+ */
+app.get('/topic', topic.list);
+app.post('/topic', topic.new);
+app.get('/topic/:tid', topic.get);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

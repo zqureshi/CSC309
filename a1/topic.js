@@ -211,3 +211,14 @@ exports.upvote = function(req, res) {
     res.json(400, {error: e});
   }
 }
+
+/**
+ * Clear all topics, to be used for unit test fixtures.
+ *
+ * @param {request} req
+ * @param {response} res
+ */
+exports.clear = function(req, res) {
+  topics.length = 0;
+  res.json({success: true});
+}

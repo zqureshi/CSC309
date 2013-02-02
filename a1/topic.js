@@ -63,6 +63,17 @@ function validateString(obj, elem) {
 }
 
 /**
+ * Validate given Topic ID.
+ * @param tid
+ */
+function validateTopicId(tid) {
+  _validate({Topic: tid}, 'Topic', 'string');
+  if(tid < 0 || tid >= topics.length ) {
+    throw 'Invalid Topic';
+  }
+}
+
+/**
  * Return a listing of all topics as JSON.
  *
  * @param {request} req
@@ -108,9 +119,10 @@ exports.new = function(req, res) {
  */
 exports.get = function(req, res) {
   var tid = req.params.tid;
-  if(0 <= tid && tid < topics.length ) {
+  try {
+    validateTopicId(tid);
     res.json(topics[tid]);
-  } else {
-    res.json({error: 'Invalid Topic'});
+  } catch(e) {
+    res.json({error: e});
   }
 }

@@ -123,6 +123,6 @@ exports.get = function(req, res) {
     validateTopicId(tid);
     res.json(topics[tid]);
   } catch(e) {
-    res.json({error: e});
+    res.json(400, {error: e});
   }
 }

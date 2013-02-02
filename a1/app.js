@@ -37,6 +37,8 @@ app.get('/', function(req, res){
 app.get('/topic', topic.list);
 app.post('/topic', topic.new);
 app.get('/topic/:tid', topic.get);
+app.post('/topic/:tid/reply', topic.reply);
+app.post('/topic/:tid/reply/:rid', topic.reply);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

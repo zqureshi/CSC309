@@ -126,3 +126,49 @@ exports.get = function(req, res) {
     res.json(400, {error: e});
   }
 }
+
+/**
+ * Reply to a topic or another rpely.
+ *
+ * @param {request} req
+ * @param {response} res
+ */
+exports.reply = function(req, res) {
+  var tid = req.params.tid;
+
+  try {
+    validateTopicId(tid);
+    validateString(req.body, 'text');
+
+    /* Traverse thread to find parent to reply to */
+    var parent =  topic = topics[tid];
+    var path = req.params.rid != undefined ? req.params.rid.split(':') : [];
+    while(path.length > 0) {
+      var rid = path.shift();
+      if(parent.replies[rid] != undefined) {
+        parent = parent.replies[rid];
+      } else {
+        throw 'Invalid Reply ID';
+      }
+    }
+
+    /* Append reply */
+    var id = parent.replies.push({
+      id: null,
+      text: req.body.text,
+      votes: 0,
+      replies: []
+    }) - 1;
+
+    /* Calculate and update reply id */
+    if(parent != topic) {
+      parent.replies[id].id = parent.id + ':' + id;
+    } else {
+      parent.replies[id].id = id;
+    }
+
+    res.json(parent.replies[id]);
+  } catch(e) {
+    res.json(400, {error: e});
+  }
+}

@@ -172,3 +172,41 @@ exports.reply = function(req, res) {
     res.json(400, {error: e});
   }
 }
+
+/**
+ * Upvote a reply.
+ *
+ * @param {request} req
+ * @param {response} res
+ */
+exports.upvote = function(req, res) {
+  var tid = req.params.tid;
+
+  try {
+    validateTopicId(tid);
+    validateString(req.params, 'rid');
+
+    /* Traverse path and store each element */
+    var parent = topic = topics[tid];
+    var path = req.params.rid.split(':');
+    var thread = [topic];
+    while(path.length > 0) {
+      var reply = parent.replies[path.shift()];
+      if(reply != undefined) {
+        thread.push(reply);
+        parent = reply;
+      } else {
+        throw 'Invalid Reply ID';
+      }
+    }
+
+    /* Upvote each element in path */
+    thread.forEach(function(reply) {
+      reply.votes += 1;
+    });
+
+    res.json(thread.pop());
+  } catch(e) {
+    res.json(400, {error: e});
+  }
+}

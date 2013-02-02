@@ -39,6 +39,7 @@ app.post('/topic', topic.new);
 app.get('/topic/:tid', topic.get);
 app.post('/topic/:tid/reply', topic.reply);
 app.post('/topic/:tid/reply/:rid', topic.reply);
+app.post('/topic/:tid/reply/:rid/upvote', topic.upvote);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

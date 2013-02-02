@@ -8,6 +8,34 @@
  * @type {Array}
  */
 var topics = [
+  {
+    id: 0,
+    title: 'Hacker News',
+    link: 'http://news.ycombinator.com/',
+    votes: 0,
+    replies: [
+      {
+        id: 0,
+        text: 'Reply 1',
+        votes: 0,
+        replies: [
+          {
+            id: 0,
+            text: 'Reply 1.1',
+            votes: 0,
+            replies: []
+          }
+        ]
+      },
+
+      {
+        id: 1,
+        text: 'Reply 2',
+        votes: 0,
+        replies: []
+      }
+    ]
+  }
 ];
 
 /**

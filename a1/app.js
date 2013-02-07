@@ -1,47 +1,143 @@
-
-/**
- * Module dependencies.
- */
-
-var express = require('express')
-  , http = require('http')
+var http = require('http')
   , path = require('path')
+  , url = require('url')
+  , qs = require('querystring')
+  , fs = require('fs')
   , topic = require('./topic');
 
-var app = express();
+/**
+ * Create a new Route object.
+ *
+ * @param {RegExp} path
+ * @param {String []} keys
+ * @param {Function} callback
+ * @constructor
+ */
+function Route(path, keys, callback) {
+  this.path = path;
+  this.keys = keys;
+  this.callback = callback;
+}
 
-app.configure(function(){
-  app.set('port', process.env.PORT || 31315);
-  app.use(express.favicon());
-  app.use(express.logger('dev'));
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(app.router);
-  app.use(express.static(path.join(__dirname, 'public')));
-});
+/* Routes for REST API */
+var routes = {
+  GET: [
+    new Route(/^\/topic\/?$/i, [], topic.list),
+    new Route(/^\/topic\/([^/]+?)\/?$/i, ['tid'], topic.get),
+    new Route(/^\/clear\/?$/i, [], topic.clear)
+  ],
 
-app.configure('development', function(){
-  app.use(express.errorHandler());
-});
+  POST: [
+    new Route(/^\/topic\/?$/i, [], topic.new),
+    new Route(/^\/topic\/([^/]+?)\/reply\/?$/i, ['tid'], topic.reply),
+    new Route(/^\/topic\/([^/]+?)\/reply\/([^/]+?)\/?$/i, ['tid', 'rid'], topic.reply),
+    new Route(/^\/topic\/([^/]+?)\/reply\/([^/]+?)\/upvote\/?$/i, ['tid', 'rid'], topic.upvote)
+  ]
+};
+
+/* MIME Types for Static Files */
+var MIME_TYPES = {
+  html: 'text/html',
+  css: 'text/css',
+  js: 'application/javascript',
+  gif: 'image/gif',
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  png: 'image/png'
+};
 
 /**
- * Serve the application index
+ * Object which mimics the express {request} object.
+ *
+ * @param {ServerRequest} req
+ * @constructor
  */
-app.get('/', function(req, res){
-  res.sendfile(path.join(__dirname, 'public', 'index.html'));
-});
+function Request(req) {
+  this.req = req;
+  this.params = {};
+  this.body = {};
+}
 
 /**
- * Routes for Topic REST API
+ * Object which mimics the express {response} object.
+ *
+ * @param {ServerResponse} res
+ * @constructor
  */
-app.get('/topic', topic.list);
-app.post('/topic', topic.new);
-app.get('/topic/:tid', topic.get);
-app.post('/topic/:tid/reply', topic.reply);
-app.post('/topic/:tid/reply/:rid', topic.reply);
-app.post('/topic/:tid/reply/:rid/upvote', topic.upvote);
-app.get('/clear', topic.clear);
+function Response(res) {
+  this.res = res;
+}
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
+/**
+ * Send a JSON response back to client.
+ *
+ * @param {Mixed} obj or status
+ * @param {Mixed} obj
+ */
+Response.prototype.json = function(obj) {
+  var res = this.res;
+
+  var data = obj;
+  if(arguments.length == 2) {
+    res.statusCode = arguments[0];
+    data = arguments[1];
+  }
+
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify(data));
+}
+
+/**
+ * Handle HTTP Requests and route to functions.
+ *
+ * @param {IncomingMessage} req
+ * @param {ServerResponse} res
+ */
+function router(req, res) {
+  var request = new Request(req)
+    , response = new Response(res)
+    , body = '';
+
+  req.on('data', function(chunk) {
+    body += chunk;
+  });
+
+  var candidates = routes[req.method];
+  for(var i = 0; i < candidates.length; i++) {
+    var match = candidates[i].path.exec(url.parse(req.url).pathname);
+
+    if (!match) continue;
+
+    for(var j = 0; j < candidates[i].keys.length; j++) {
+      request.params[candidates[i].keys[j]] = match[j+1];
+    }
+
+    req.on('end', function() {
+      request.body = qs.parse(body);
+      console.log('Matched ' + req.method + ': ' + match.input + ' -> ' + candidates[i].path);
+      candidates[i].callback(request, response);
+    });
+
+    break;
+  }
+
+  /* If no route matched, then serve static content */
+  if(!match) {
+    var file = url.parse(req.url).pathname;
+    fs.readFile(path.join('./public', file == '/' ? 'index.html' : file), function(err, data){
+      if (err) {
+        response.json(404, {error: 'Not Found'});
+        return;
+      }
+
+      res.setHeader('Content-Type', MIME_TYPES[path.extname(file).slice(1) || 'text/plain']);
+      res.end(data);
+    })
+  }
+}
+
+/* Start server and listen for requests */
+var PORT = process.env.PORT || 31315;
+http.createServer(router).listen(PORT, function() {
+  console.log('HTTP Server Listening on Port ' + PORT);
 });

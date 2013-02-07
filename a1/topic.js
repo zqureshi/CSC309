@@ -74,7 +74,7 @@ function validateString(obj, elem) {
  */
 function validateTopicId(tid) {
   _validate({Topic: tid}, 'Topic', 'string');
-  if(tid < 0 || tid >= topics.length ) {
+  if(isNaN(Number(tid)) || tid < 0 || tid >= topics.length ) {
     throw 'Invalid Topic';
   }
 }

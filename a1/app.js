@@ -130,6 +130,7 @@ function router(req, res) {
         return;
       }
 
+      console.log('Serving Static: ' + file);
       res.setHeader('Content-Type', MIME_TYPES[path.extname(file).slice(1) || 'text/plain']);
       res.end(data);
     })

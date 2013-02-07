@@ -4,7 +4,16 @@
 }
 
 .root-comment {
-    text-decoration:underline;
+    text-decoration: underline;
+    margin-bottom: 0px;
+    margin-top: 20px;
+}
+
+a {
+    text-decoration: none;
+    font-size: 13px;
+    color: #c89e9e;
+    margin-bottom: 10px;
 }
 
 .reply-button {

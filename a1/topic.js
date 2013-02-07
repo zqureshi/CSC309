@@ -35,7 +35,13 @@ var topics = [
         replies: []
       }
     ]
-  }
+  }, {
+        id: 1,
+        title: 'News number 2: Jack has lost his surprise :(',
+        link: 'http://news.ycombinator.com/',
+        votes: 0,
+        replies: []
+    }
 ];
 
 /**

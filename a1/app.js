@@ -90,7 +90,7 @@ Response.prototype.json = function(obj) {
   }
 
   res.setHeader('Content-Type', 'application/json');
-  res.end(JSON.stringify(data));
+  res.end(JSON.stringify(data, null, 2));
 }
 
 /**

@@ -118,23 +118,21 @@ function router(req, res) {
       candidates[i].callback(request, response);
     });
 
-    break;
+    return;
   }
 
   /* If no route matched, then serve static content */
-  if(!match) {
-    var file = url.parse(req.url).pathname;
-    fs.readFile(path.join('./public', file == '/' ? 'index.html' : file), function(err, data){
-      if (err) {
-        response.json(404, {error: 'Not Found'});
-        return;
-      }
+  var file = url.parse(req.url).pathname;
+  fs.readFile(path.join('./public', file == '/' ? 'index.html' : file), function(err, data){
+    if (err) {
+      response.json(404, {error: 'Not Found'});
+      return;
+    }
 
-      console.log('Serving Static: ' + file);
-      res.setHeader('Content-Type', MIME_TYPES[path.extname(file).slice(1) || 'text/plain']);
-      res.end(data);
-    })
-  }
+    console.log('Serving Static: ' + file);
+    res.setHeader('Content-Type', MIME_TYPES[path.extname(file).slice(1) || 'text/plain']);
+    res.end(data);
+  })
 }
 
 /* Start server and listen for requests */

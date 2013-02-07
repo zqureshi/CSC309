@@ -13,25 +13,31 @@ var http = require('http')
  * @param {Function} callback
  * @constructor
  */
-function Route(path, keys, callback) {
-  this.path = path;
-  this.keys = keys;
+function Route(path, callback) {
+  var keys = this.keys = [];
   this.callback = callback;
+  this.path = path;
+  this.regex = new RegExp(
+    '^'.concat(path).concat('/?$').replace(/\//g, '\\/')
+      .replace(/:([^\\/]+?)\\\//gi, function(match, key, offset, string) {
+        keys.push(key);
+        return '([^/]+?)';
+      }), 'i');
 }
 
 /* Routes for REST API */
 var routes = {
   GET: [
-    new Route(/^\/topic\/?$/i, [], topic.list),
-    new Route(/^\/topic\/([^/]+?)\/?$/i, ['tid'], topic.get),
-    new Route(/^\/clear\/?$/i, [], topic.clear)
+    new Route('/topic', topic.list),
+    new Route('/topic/:tid', topic.get),
+    new Route('/clear', topic.clear)
   ],
 
   POST: [
-    new Route(/^\/topic\/?$/i, [], topic.new),
-    new Route(/^\/topic\/([^/]+?)\/reply\/?$/i, ['tid'], topic.reply),
-    new Route(/^\/topic\/([^/]+?)\/reply\/([^/]+?)\/?$/i, ['tid', 'rid'], topic.reply),
-    new Route(/^\/topic\/([^/]+?)\/reply\/([^/]+?)\/upvote\/?$/i, ['tid', 'rid'], topic.upvote)
+    new Route('/topic', topic.new),
+    new Route('/topic/:tid/reply', topic.reply),
+    new Route('/topic/:tid/reply/:rid', topic.reply),
+    new Route('/topic/:tid/reply/:rid/upvote', topic.upvote)
   ]
 };
 
@@ -104,7 +110,7 @@ function router(req, res) {
 
   var candidates = routes[req.method];
   for(var i = 0; i < candidates.length; i++) {
-    var match = candidates[i].path.exec(url.parse(req.url).pathname);
+    var match = candidates[i].regex.exec(url.parse(req.url).pathname);
 
     if (!match) continue;
 

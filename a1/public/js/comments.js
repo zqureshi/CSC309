@@ -29,7 +29,6 @@ $(document).ready(function(){
      */
     $('#new-topic-form').submit(function(event){
        event.preventDefault();
-       $("#new-topic-form")[0].reset()
        $( this ).hide();
 
        var $form = $( this ),
@@ -37,7 +36,9 @@ $(document).ready(function(){
            link = $form.find('input[name="link"]').val(),
            url = $form.attr( 'action' );
 
-       var posting = $.post( url, { "title": title, "link" : link});
+       var posting = $.post( url, { "title": title, "link" : link}, function() {
+           $("#new-topic-form")[0].reset()
+       });
 
        posting.done(function(data){
            var content = $( data ).find( '#content' );

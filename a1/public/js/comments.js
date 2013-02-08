@@ -9,6 +9,20 @@ $(document).ready(function(){
     $("#new-topic-form").hide();
 
     /**
+     * Initial get on /topics, populating page.
+     */
+    $.getJSON("/topic", function(data){
+        //var items = [];
+
+        /* create a new div for each thread*/
+        $.each(data, function(key, value){
+            $('<div id="thread' + key + '"/>').appendTo('#topics');
+            createThread($('#thread' + key), value.title,value.link, true);
+            threadcount++;
+        });
+    });
+
+    /**
      * Event Handler for the New Topic Button.
      */
     $("#new-topic-button").click(function(){
@@ -63,9 +77,10 @@ $(document).ready(function(){
             'class': 'replies-container'
         });
 
-      /*  var link = jQuery ('<a/>', {
+        var link = jQuery ('<a/>', {
             'href' : link,
-            'text' : "  |  " +  link + '<br>' */
+            'html' : "  |  " +  link + '<br>'
+        });
 
         var upvoteButton = jQuery('<i/>', {
             'class' : 'upvote-icon icon-thumbs-up icon-2x pull-left icon-muted'
@@ -85,12 +100,17 @@ $(document).ready(function(){
                 upvoteButton.removeClass("icon-muted","cursor", "pointer");
             };
             onSuccess();//upvoteButton.post("/topic/:tid/reply/:rid/upvote")
+
         });
 
+        //APPEND VOTES TO UPVOTE CONTAINER,
+        // make href on upvotes function post data to server
+        //peding post success, display on page
+
         if (isRoot){
-            container.append(comment, '<a href="' + link + '">  |  '+  link + '<br></a>', replyButton, repliesContainer);
+            container.append(comment, link, replyButton, repliesContainer);
         } else {
-            container.append(upvoteButton, comment, replyButton, repliesContainer);
+            container.append(upvoteContainer, comment, replyButton, repliesContainer);
         }
 
         replyButton.click(function() {
@@ -113,25 +133,12 @@ $(document).ready(function(){
                 if(textBox.val()) {
                     commentEditor.remove();
                     replyButton.show();
+                    //POST DATA TO SERVER ON SUCCESS PROCEED TO DISPLAY ON PAGE
                     createThread(repliesContainer, textBox.val());
                 }
             });
         });
         isRoot && replyButton.click();
     };
-
-    /**
-     * Initial get on /topics, populating page.
-     */
-    $.getJSON("/topic", function(data){
-        //var items = [];
-
-        /* create a new div for each thread*/
-        $.each(data, function(key, value){
-            $('<div id="thread' + key + '"/>').appendTo('#topics');
-            createThread($('#thread' + key), value.title,value.link, true);
-            threadcount++;
-        });
-    });
 
 });

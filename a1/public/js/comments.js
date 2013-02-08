@@ -1,20 +1,41 @@
 $(document).ready(function(){
+    /**
+     * Tracks the number of root threads.
+     * @type {Number}
+     */
     var threadcount = 0;
 
-    $(".new-topic").click(function(){
-       var link = prompt("Please enter the link for your new topic:");
-       while (!link){
-           link = prompt("Sorry, links are mandatory. Link please:");
-       }
-       var title = prompt("What would you like the title to be?");
-       while (!title){
-           title = prompt("You can't post a topic without a title! Title please:");
-        }
+    //hidden unless in use
+    $("#new-topic-form").hide();
 
-        $('<div id="thread' + threadcount + '"/>').appendTo('#topics');
-        createThread($('#thread' + threadcount), title,link, true);
-        threadcount++;
+    /**
+     * Event Handler for the New Topic Button.
+     */
+    $("#new-topic-button").click(function(){
+       $("#new-topic-form").show();
+    });
 
+    /**
+     * Event Handler for the Submit button. Posts form data to API.
+     * If post successful, displays new thread on page without refresh.
+     */
+    $('#new-topic-form').submit(function(event){
+        event.preventDefault();
+       $( this ).hide();
+
+       var $form = $( this ),
+           title = $form.find('textarea[name="title"]').val(),
+           link = $form.find('input[name="link"]').val(),
+           url = $form.attr( 'action' );
+
+       var posting = $.post( url, { "title": title, "link" : link});
+
+       posting.done(function(data){
+           var content = $( data ).find( '#content' );
+           $('<div id="thread' + threadcount + '"/>').appendTo('#topics');
+           createThread($('#thread' + threadcount), data.title, data.link, true);
+           threadcount++;
+       });
     });
 
     var createThread = function(container, commentText, link, isRoot) {
@@ -77,28 +98,18 @@ $(document).ready(function(){
         isRoot && replyButton.click();
     };
 
+    /**
+     * Initial get on /topics, populating page.
+     */
     $.getJSON("/topic", function(data){
         //var items = [];
 
-
+        /* create a new div for each thread*/
         $.each(data, function(key, value){
-            /* items.push('<div class="thread" id=' + count.toString() + '/> ')
-             });
-             $("<div/>").appendTo("#topics");
-             }); */
-
-            //make a div with id threadNUM, append it to the topics div
             $('<div id="thread' + key + '"/>').appendTo('#topics');
-
-            //pass threadNUM to th createThread function.
             createThread($('#thread' + key), value.title,value.link, true);
             threadcount++;
-
-
-            //   $('#topics').append('this is the value.title:   ' + value.title + '<br>');
         });
     });
-
-
 
 });

@@ -26,6 +26,10 @@ a {
     padding: 0 1px;
 }
 
+input, textarea {
+    width: 400px;
+}
+
 .comment-box {
     width: 300px;
     height: 70px;

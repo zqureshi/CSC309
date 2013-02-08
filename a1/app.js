@@ -90,7 +90,7 @@ Response.prototype.json = function(obj) {
   }
 
   res.setHeader('Content-Type', 'application/json');
-  res.end(JSON.stringify(data));
+  res.end(JSON.stringify(data, null, 2));
 }
 
 /**
@@ -129,14 +129,15 @@ function router(req, res) {
 
   /* If no route matched, then serve static content */
   var file = url.parse(req.url).pathname;
-  fs.readFile(path.join('./public', file == '/' ? 'index.html' : file), function(err, data){
+  file = file == '/' ? 'index.html' : file;
+  fs.readFile(path.join('./public', file), function(err, data) {
     if (err) {
       response.json(404, {error: 'Not Found'});
       return;
     }
 
     console.log('Serving Static: ' + file);
-    res.setHeader('Content-Type', MIME_TYPES[path.extname(file).slice(1) || 'text/plain']);
+    res.setHeader('Content-Type', MIME_TYPES[path.extname(file).slice(1)] || 'text/plain');
     res.end(data);
   })
 }

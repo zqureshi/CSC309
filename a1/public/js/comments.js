@@ -12,7 +12,15 @@ $(document).ready(function(){
      * Event Handler for the New Topic Button.
      */
     $("#new-topic-button").click(function(){
-       $("#new-topic-form").show();
+        $("#new-topic-form").toggle('fast');
+    });
+
+    $('html').click(function() {
+        $("#new-topic-form").hide();
+    });
+
+    $('.header-container').click(function(event){
+        event.stopPropagation();
     });
 
     /**
@@ -20,7 +28,8 @@ $(document).ready(function(){
      * If post successful, displays new thread on page without refresh.
      */
     $('#new-topic-form').submit(function(event){
-        event.preventDefault();
+       event.preventDefault();
+       $("#new-topic-form")[0].reset()
        $( this ).hide();
 
        var $form = $( this ),

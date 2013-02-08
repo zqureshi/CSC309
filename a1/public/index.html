@@ -70,34 +70,34 @@
 
     <!-- Begin page content -->
     <div class="container">
-        <form id="new-topic-form" class="form-horizontal" action="/topic">
-            <div class="control-group">
-                <label class="control-label" for="title">
-                    Topic
-                    <span class="help-block"><small>(140 char. max)</small></span>
-                </label>
-                <div class="controls">
-                    <textarea rows="3" maxlength="140"  id="title" name="title"
-                              placeholder="I didn't quite catch that, Lou."></textarea>
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="link">link</label>
-                <div class="controls">
-                    <input type="url" id="link" name="link" value="http://" >
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
-                   <input type="submit" class="btn" value="submit"/>
-                </div>
-            </div>
-        </form>
         <div id='topics'></div>
         <div class="header-container">
             <div class="page-header">
                 <h1 id="headline">Comment away, kemosabe!</h1>
                 <button id="new-topic-button" class='btn btn-large'><i class="icon-pencil"></i> Topic</button>
+                <form id="new-topic-form" class="form-horizontal" action="/topic">
+                    <div class="control-group">
+                        <label class="control-label" for="title">
+                            Topic
+                            <span class="help-block"><small>(140 char. max)</small></span>
+                        </label>
+                        <div class="controls">
+                            <textarea rows="3" maxlength="140"  id="title" name="title"
+                                      placeholder="I didn't quite catch that, Lou."></textarea>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="link">link</label>
+                        <div class="controls">
+                            <input type="url" id="link" name="link" value="http://" >
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <input type="submit" class="btn" value="submit"/>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

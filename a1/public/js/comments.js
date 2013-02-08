@@ -67,12 +67,24 @@ $(document).ready(function(){
             'href' : link,
             'text' : "  |  " +  link + '<br>' */
 
-        var upvoteButton = jQuery('<a/>', {
-            'class' : 'upvote-container',
-            'href' : "#",
-            'style' : "float:right",
-            'html' : '<img class="upvotes-icon" src="http://0-media-cdn.foolz.us/ffuuka/board/a/image/1346/77/1346778185717.png"/>'
+        var upvoteButton = jQuery('<i/>', {
+            'class' : 'upvote-icon icon-thumbs-up icon-2x pull-left icon-muted'
+        });
 
+        upvoteButton.css( 'cursor', 'pointer' );
+
+        upvoteButton.hover(function(){
+            upvoteButton.removeClass("icon-muted");
+        },function(){
+            upvoteButton.addClass("icon-muted");
+        });
+
+        upvoteButton.click(function() {
+            var onSuccess = function() {
+                upvoteButton.unbind('mouseenter mouseleave');
+                upvoteButton.removeClass("icon-muted","cursor", "pointer");
+            };
+            onSuccess();//upvoteButton.post("/topic/:tid/reply/:rid/upvote")
         });
 
         if (isRoot){

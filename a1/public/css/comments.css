@@ -56,6 +56,10 @@ h1 {
     top: 0;
 }
 
+.upvote-icon {
+    display: inline-block;
+}
+
 div#topics {
     margin-top: 120px;
 }

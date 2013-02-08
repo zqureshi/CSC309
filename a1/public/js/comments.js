@@ -1,13 +1,13 @@
 $(document).ready(function(){
     var threadcount = 0;
 
-    $("button").click(function(){
+    $(".new-topic").click(function(){
        var link = prompt("Please enter the link for your new topic:");
-       while (link == null){
+       while (!link){
            link = prompt("Sorry, links are mandatory. Link please:");
        }
        var title = prompt("What would you like the title to be?");
-       while (title == null){
+       while (!title){
            title = prompt("You can't post a topic without a title! Title please:");
         }
 
@@ -32,10 +32,22 @@ $(document).ready(function(){
             'class': 'replies-container'
         });
 
+      /*  var link = jQuery ('<a/>', {
+            'href' : link,
+            'text' : "  |  " +  link + '<br>' */
+
+        var upvoteButton = jQuery('<a/>', {
+            'class' : 'upvote-container',
+            'href' : "#",
+            'style' : "float:right",
+            'html' : '<img class="upvotes-icon" src="http://0-media-cdn.foolz.us/ffuuka/board/a/image/1346/77/1346778185717.png"/>'
+
+        });
+
         if (isRoot){
-            container.append(comment, '<a href="' + link + '">'+ link + '<br></a>', replyButton, repliesContainer);
+            container.append(comment, '<a href="' + link + '">  |  '+  link + '<br></a>', replyButton, repliesContainer);
         } else {
-            container.append(comment, replyButton, repliesContainer);
+            container.append(upvoteButton, comment, replyButton, repliesContainer);
         }
 
         replyButton.click(function() {
@@ -66,7 +78,7 @@ $(document).ready(function(){
     };
 
     $.getJSON("/topic", function(data){
-        var items = [];
+        //var items = [];
 
 
         $.each(data, function(key, value){

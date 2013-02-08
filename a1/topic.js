@@ -135,7 +135,7 @@ exports.get = function(req, res) {
 }
 
 /**
- * Reply to a topic or another rpely.
+ * Reply to a topic or another reply.
  *
  * @param {request} req
  * @param {response} res

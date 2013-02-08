@@ -16,6 +16,10 @@ a {
     margin-bottom: 10px;
 }
 
+.upvotes-icon {
+    height: 17px;
+}
+
 .reply-button {
     color: #888888;
     font-weight: bold;

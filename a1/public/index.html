@@ -70,10 +70,6 @@
 
     <!-- Begin page content -->
     <div class="container">
-        <div class="page-header">
-            <button id="new-topic-button" class='btn btn-large' style="float:right"><i class="icon-pencil"></i> Topic</button>
-            <h1>Comment away, kemosabe!</h1>
-        </div>
         <form id="new-topic-form" class="form-horizontal" action="/topic">
             <div class="control-group">
                 <label class="control-label" for="title">
@@ -98,6 +94,12 @@
             </div>
         </form>
         <div id='topics'></div>
+        <div class="header-container">
+            <div class="page-header">
+                <h1 id="headline">Comment away, kemosabe!</h1>
+                <button id="new-topic-button" class='btn btn-large'><i class="icon-pencil"></i> Topic</button>
+            </div>
+        </div>
     </div>
 
     <div id="push"></div>

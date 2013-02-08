@@ -38,3 +38,24 @@ input, textarea {
 .comment-editor * {
     display: block;
 }
+
+.page-header {
+    margin-top: 20px;
+}
+
+h1 {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 50px;
+}
+
+.header-container {
+    margin-top: 0;
+    background-color: white;
+    position: fixed;
+    top: 0;
+}
+
+div#topics {
+    margin-top: 120px;
+}

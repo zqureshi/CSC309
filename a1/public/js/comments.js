@@ -5,19 +5,32 @@ $(document).ready(function(){
      */
     var threadcount = 0;
 
-    //hidden unless in use
-    $("#new-topic-form").hide();
+    /**
+     * Helper function for initial get on /topics.
+     * @param replies  a nested array of json objects having properties id, title, votes, and replies.
+     * @param parentID  a string of containing the id of the replies' parent
+     */
+    var _nestReplies = function(replies, parentID){
+        $.each(replies, function(key, value){
+               var reply = createThread( parentID + ':' + key, value.text);
+               $('#' + parentID).append(reply);
+               if(value.replies){
+                _nestReplies(value.replies, parentID + ':' + key);
+               }
+            });
+    };
 
     /**
      * Initial get on /topics, populating page.
      */
     $.getJSON("/topic", function(data){
-        //var items = [];
-
-        /* create a new div for each thread*/
         $.each(data, function(key, value){
-            $('<div id="thread' + key + '"/>').appendTo('#topics');
-            createThread($('#thread' + key), value.title,value.link, true);
+            var newTopic = createThread(threadcount, value.title, value.link );
+            $('#topics').append(newTopic);
+
+            if(value.replies){
+                _nestReplies(value.replies, 'thread' + key);
+            }
             threadcount++;
         });
     });
@@ -55,9 +68,8 @@ $(document).ready(function(){
        });
 
        posting.done(function(data){
-           var content = $( data ).find( '#content' );
-           $('<div id="thread' + threadcount + '"/>').appendTo('#topics');
-           createThread($('#thread' + threadcount), data.title, data.link, true);
+           var newTopic = createThread(threadcount, value.title, value.link );
+           $('#topics').append(newTopic);
            threadcount++;
        });
     });
@@ -110,7 +122,7 @@ $(document).ready(function(){
         if (isRoot){
             container.append(comment, link, replyButton, repliesContainer);
         } else {
-            container.append(upvoteContainer, comment, replyButton, repliesContainer);
+            container.append(upvoteButton, comment, replyButton, repliesContainer);
         }
 
         replyButton.click(function() {
@@ -138,7 +150,6 @@ $(document).ready(function(){
                 }
             });
         });
-        isRoot && replyButton.click();
     };
 
 });

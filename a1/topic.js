@@ -16,12 +16,12 @@ var topics = [
     replies: [
       {
         id: "0",
-        text: 'Reply 1',
+        text: 'Reply 0',
         votes: 0,
         replies: [
           {
             id: "0:0",
-            text: 'Reply 1.1',
+            text: 'Reply 0.0',
             votes: 0,
             replies: []
           }
@@ -30,7 +30,7 @@ var topics = [
 
       {
         id: "1",
-        text: 'Reply 2',
+        text: 'Reply 1',
         votes: 0,
         replies: []
       }
@@ -40,7 +40,26 @@ var topics = [
         title: 'News number 2: Jack has lost his surprise :(',
         link: 'http://news.ycombinator.com/',
         votes: 0,
-        replies: []
+        replies: [ {
+            id: "0",
+            text: 'Reply 0',
+            votes: 0,
+            replies: [
+                {
+                    id: "1:0",
+                    text: 'Reply 0.0',
+                    votes: 0,
+                    replies: []
+                }
+            ]
+        },
+
+            {
+                id: "1",
+                text: 'Reply 1',
+                votes: 0,
+                replies: []
+            }]
     }
 ];
 

@@ -21,7 +21,7 @@ function Route(path, callback) {
     '^'.concat(path).concat('/?$').replace(/\//g, '\\/')
       .replace(/:([^\\/]+?)\\\//gi, function(match, key, offset, string) {
         keys.push(key);
-        return '([^/]+?)';
+        return '([^/]+?)\\/';
       }), 'i');
 }
 

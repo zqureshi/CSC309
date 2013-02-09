@@ -61,7 +61,7 @@ div#topics {
 }
 
 form#new-topic-form {
-    display: block;
+    display: none;
     margin-top: 30px;
     position: relative;
     left: -80px;

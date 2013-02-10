@@ -170,6 +170,7 @@ exports.reply = function(req, res) {
       id: null,
       text: req.body.text,
       votes: 0,
+      voteWeight : 0,
       replies: []
     }) - 1;
 

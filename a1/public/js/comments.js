@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
     /**
-     * Event Handler for the New Topic Button.
+     * Event Handlers for the New Topic Button.
      */
     $("#new-topic-button").click(function(){
         $("#new-topic-form").toggle('fast');
@@ -9,9 +9,15 @@ $(document).ready(function(){
 
     $('html').click(function() {
         $("#new-topic-form").hide();
+        $('[id*=":"]').hide();
     });
 
     $('.header-container').click(function(event){
+        event.stopPropagation();
+        $('[id*=":"]').hide();
+    });
+
+    $('.container').click(function(event) {
         event.stopPropagation();
     });
 
@@ -40,6 +46,7 @@ $(document).ready(function(){
        });
     });
 
+
     /**
      * Creates a comment thread (tree) and places the post with
      * the specified id and text at the root of the thread.
@@ -53,11 +60,17 @@ $(document).ready(function(){
      */
     var createThread = function(id, numVotes, text, url) {
         id = String(id);
+
         var thread = jQuery("<div/>", {
             'class' : 'comment-thread',
             'id' : 'thread' + id
         });
-        return thread.append(createPost(id, numVotes, text, url));
+
+        thread.click(function(){
+            $(this).find('[id*=":"]').toggle('fast');
+        });
+
+          return thread.append(createPost(id, numVotes, text, url));
     };
 
     /**
@@ -77,6 +90,7 @@ $(document).ready(function(){
             postID = "";
         if(isTopic) {
             topicID = id;
+
         }
         else {
             var topicIndex = id.indexOf(":");
@@ -108,6 +122,7 @@ $(document).ready(function(){
             'class' : 'post',
             'id' : 'post' + id
         });
+
         return post.append(upvoteContainer, entryContainer);
     };
 
@@ -236,4 +251,5 @@ $(document).ready(function(){
         };
         populate($("#topics"), data);
     });
+
 });

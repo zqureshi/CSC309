@@ -90,3 +90,7 @@ form#new-topic-form {
     position: relative;
     left: -80px;
 }
+
+div[id*=":"] {
+    display: none;
+}

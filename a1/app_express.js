@@ -37,6 +37,7 @@ app.get('/', function(req, res){
 app.get('/topic', topic.list);
 app.post('/topic', topic.new);
 app.get('/topic/:tid', topic.get);
+app.post('/topic/:tid/upvote', topic.upvote);
 app.post('/topic/:tid/reply', topic.reply);
 app.post('/topic/:tid/reply/:rid', topic.reply);
 app.post('/topic/:tid/reply/:rid/upvote', topic.upvote);

@@ -9,7 +9,7 @@ Requirements
 ------------
 
   + Node.js
-  + Express (3.x)
+  + Express (3.x) - (optional, to be used with app_express.js)
 
 Usage
 -----

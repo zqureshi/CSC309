@@ -46,14 +46,17 @@ var topics = [
         text: 'News number 2: Jack has lost his surprise :(',
         link: 'http://news.ycombinator.com/',
         votes: 0,
+        voteWeight : 0,
         replies: [ {
             id: "1:0",
             text: 'Reply 0',
+            votes: 0,
             voteWeight: 0,
             replies: [
                 {
                     id: "1:0:0",
                     text: 'Reply 0.0',
+                    votes: 0,
                     voteWeight: 0,
                     replies: []
                 }
@@ -64,6 +67,7 @@ var topics = [
                 id: "1:1",
                 text: 'Reply 1',
                 voteWeight: 0,
+                votes: 0,
                 replies: []
             }]
     }

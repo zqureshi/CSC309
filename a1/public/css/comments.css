@@ -1,9 +1,10 @@
-.replies-container {
+.comment-thread {
 	left:	30px;
 	position: relative;
+    margin-top: 30px;
 }
 
-.root-comment {
+.topic-text {
     text-decoration: underline;
     margin-bottom: 0px;
     margin-top: 20px;
@@ -33,10 +34,12 @@ input, textarea {
 .comment-box {
     width: 300px;
     height: 70px;
+    margin-top: 30px;
 }
 
 .comment-editor * {
     display: block;
+    margin-left: 45px;
 }
 
 .page-header {
@@ -56,16 +59,27 @@ h1 {
     top: 0;
 }
 
+.post-link {
+    display: block;
+}
+.voting-container {
+    cursor: pointer;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+}
+
 .upvote-icon {
-    display: inline-block;
+    display: block;
 }
 
 div#topics {
     margin-top: 120px;
+    margin-bottom: 100px;
 }
 
 form#new-topic-form {
-    display: block;
+    display: none;
     margin-top: 30px;
     position: relative;
     left: -80px;

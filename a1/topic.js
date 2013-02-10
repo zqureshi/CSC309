@@ -10,17 +10,19 @@
 var topics = [
   {
     id: 0,
-    title: 'Hacker News',
+    text: 'Hacker News',
     link: 'http://news.ycombinator.com/',
+    voteWeight: 0,
     votes: 0,
     replies: [
       {
-        id: "0",
+        id: "0:0",
         text: 'Reply 1',
         votes: 0,
+        voteWeight: 0,
         replies: [
           {
-            id: "0:0",
+            id: "0:0:0",
             text: 'Reply 1.1',
             votes: 0,
             replies: []
@@ -29,7 +31,7 @@ var topics = [
       },
 
       {
-        id: "1",
+        id: "0:1",
         text: 'Reply 2',
         votes: 0,
         replies: []
@@ -98,13 +100,13 @@ exports.list = function(req, res) {
 exports.new = function(req, res) {
   try {
     var topic = req.body;
-    validateString(topic, 'title');
+    validateString(topic, 'text');
     validateString(topic, 'link');
 
     /* Push Topic and set ID */
     var id = topics.push({
       id: null,
-      title: topic.title,
+      text: topic.text,
       link: topic.link,
       votes: 0,
       replies: []
@@ -143,6 +145,7 @@ exports.get = function(req, res) {
 exports.reply = function(req, res) {
   var tid = req.params.tid;
 
+
   try {
     validateTopicId(tid);
     validateString(req.body, 'text');
@@ -168,11 +171,8 @@ exports.reply = function(req, res) {
     }) - 1;
 
     /* Calculate and update reply id */
-    if(parent != topic) {
-      parent.replies[id].id = parent.id + ':' + id;
-    } else {
-      parent.replies[id].id = id;
-    }
+    parent.replies[id].id = parent.id + ':' + id;
+
 
     res.json(parent.replies[id]);
   } catch(e) {

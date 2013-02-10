@@ -36,66 +36,109 @@ $(document).ready(function(){
            link = $form.find('input[name="link"]').val(),
            url = $form.attr( 'action' );
 
-       var posting = $.post( url, { "title": title, "link" : link}, function() {
-           $("#new-topic-form")[0].reset()
-       });
+       var posting = $.post( url, { "text": title, "link" : link});
 
        posting.done(function(data){
-           var content = $( data ).find( '#content' );
-           $('<div id="thread' + threadcount + '"/>').appendTo('#topics');
-           createThread($('#thread' + threadcount), data.title, data.link, true);
-           threadcount++;
+           $("#new-topic-form")[0].reset();
+           $("#topics").append(createThread(data.id, data.votes, data.text, data.link));
+           $('html, body').animate({
+               scrollTop: $("#thread" + String(data.id).replace(/\:/g,'\\:')).offset().top
+           }, 1000);
        });
     });
 
-    var createThread = function(container, commentText, link, isRoot) {
-        var comment = jQuery('<div/>', {
-            'class': 'comment' + (isRoot ? ' root-comment lead' : ""),
-            'html': commentText
+    /**
+     * Creates a comment thread (tree) and places the post with
+     * the specified id and text at the root of the thread.
+     *
+     * @param id {String} the id of the thread, which also specifies the ids of parents
+     * threads, all the way to the root. Use colons to separate the parent ids. E.g. 1:1:3:2
+     * @param numVotes {Number} the number of times this comment was up-voted
+     * @param text {String} the text inside the comment
+     * @param url {String} the url which will be displayed if the comment is a Topic
+     * @returns {jQuery} a div element with the class 'comment-thread' and the id 'thread' + id
+     */
+    var createThread = function(id, numVotes, text, url) {
+        id = String(id);
+        var thread = jQuery("<div/>", {
+            'class' : 'comment-thread',
+            'id' : 'thread' + id
         });
+        return thread.append(createPost(id, numVotes, text, url));
+    };
 
+    /**
+     * Creates a post with a voting area. This should be placed inside a thread.
+     *
+     * @param id {String} the id of the post, which matches the thread id
+     * @param numVotes {Number} the number of times this comment was up-voted
+     * @param text {String} the text inside the comment
+     * @param url {String} the url which will be displayed if the comment is a Topic
+     * @returns {jQuery} a div element with the class 'post' and the id 'post' + id
+     */
+    var createPost = function(id, numVotes, text, url) {
+        var isTopic = id.indexOf(":") == -1;
+
+        /* Find the topicID and the postID from the full id */
+        var topicID = "",
+            postID = "";
+        if(isTopic) {
+            topicID = id;
+        }
+        else {
+            var topicIndex = id.indexOf(":");
+            topicID = id.substring(0, topicIndex);
+            postID = id.substring(topicIndex+1)
+        }
+
+        /* generate upvote area and footer with reply button*/
+        var upvoteContainer = createUpvoteContainer(topicID, postID, numVotes);
+        var footer = createFooter(topicID, postID);
+
+        /* create the post */
+        var postText = jQuery("<div/>", {
+            'class' : 'post-text' + (isTopic ? ' topic-text lead' : ""),
+            'text' : text
+        });
+        var link = isTopic && url ? jQuery("<a/>", {
+            'class' : "post-link",
+            'text' : '| ' +  url.substring(0, 30) + (url.length > 30 ? "..." : ""),
+            'href' : url
+        }) : "";
+        var entryContainer = jQuery("<div/>", {
+            'class' : 'entry-container'
+        }).append(postText, link, footer);
+
+        /* add the upvoteContainer and entryContainer to the post*/
+        var post = jQuery("<div/>", {
+            'class' : 'post',
+            'id' : 'post' + id
+        });
+        return post.append(upvoteContainer, entryContainer);
+    };
+
+    /**
+     * Creates the elements to be placed under the comment.
+     *
+     * @param topicID {String} the id of the topic, under which this comment exists
+     * @param postID {String} the path from the topic to the comment (not includeing the comment), separated by colons.
+     * @returns {jQuery} a div element with the class 'post-footer'
+     */
+    var createFooter = function(topicID, postID) {
+        var footer = jQuery('<div/>', {
+            'class': 'post-footer'
+        });
         var replyButton = jQuery('<a/>', {
-            'href' : '#',
             'class': 'reply-button',
             'text': "reply"
         });
-        var repliesContainer = jQuery('<div/>', {
-            'class': 'replies-container'
-        });
-
-      /*  var link = jQuery ('<a/>', {
-            'href' : link,
-            'text' : "  |  " +  link + '<br>' */
-
-        var upvoteButton = jQuery('<i/>', {
-            'class' : 'upvote-icon icon-thumbs-up icon-2x pull-left icon-muted'
-        });
-
-        upvoteButton.css( 'cursor', 'pointer' );
-
-        upvoteButton.hover(function(){
-            upvoteButton.removeClass("icon-muted");
-        },function(){
-            upvoteButton.addClass("icon-muted");
-        });
-
-        upvoteButton.click(function() {
-            var onSuccess = function() {
-                upvoteButton.unbind('mouseenter mouseleave');
-                upvoteButton.removeClass("icon-muted","cursor", "pointer");
-            };
-            onSuccess();//upvoteButton.post("/topic/:tid/reply/:rid/upvote")
-        });
-
-        if (isRoot){
-            container.append(comment, '<a href="' + link + '">  |  '+  link + '<br></a>', replyButton, repliesContainer);
-        } else {
-            container.append(upvoteButton, comment, replyButton, repliesContainer);
-        }
-
+        /* Reply button actions*/
         replyButton.click(function() {
+            /* Hide all active comment editors */
             $('.comment-editor').hide();
             $('.reply-button').show();
+
+            /* Create new editor */
             var commentEditor = jQuery('<div/>', {
                 'class': 'comment-editor'
             });
@@ -103,35 +146,82 @@ $(document).ready(function(){
                 'class': 'comment-box',
                 'maxlength': 140
             });
-            var saveCommentBtn = jQuery('<button>save</button>', {
-                'class': 'save-reply-button'
+            var saveCommentBtn = jQuery('<button/>', {
+                'text' : 'save',
+                'class' : 'save-reply-button btn'
             });
             commentEditor.append(textBox, saveCommentBtn);
-            repliesContainer.append(commentEditor);
+            footer.append(commentEditor);
             replyButton.hide();
+
+            /* Saving the comment */
             saveCommentBtn.click(function() {
                 if(textBox.val()) {
-                    commentEditor.remove();
-                    replyButton.show();
-                    createThread(repliesContainer, textBox.val());
+                    var onSuccess = function(data) {
+                        commentEditor.remove();
+                        replyButton.show();
+                        $("#thread" + topicID + (postID ? "\\:" + postID.replace(/\:/g,'\\:') : "")).append(createThread(data.id, String(data.votes), data.text, null));
+                    };
+                    $.post("/topic/" + topicID + "/reply" + (postID ? "/" + postID : ""), {'text': textBox.val()}, function(result) {onSuccess(result)});
                 }
             });
         });
-        isRoot && replyButton.click();
+        return footer.append(replyButton);
     };
+
+    /**
+     * Creates the up-vote area.
+     *
+     * @param topicID {String} the id of the topic, under which this comment exists
+     * @param postID {String} the path from the topic to the comment (not includeing the comment), separated by colons.
+     * @param numVotes {Number} the number of times this comment has been up-voted
+     * @returns {jQuery} a div element with the class 'voting-container'
+     */
+    var createUpvoteContainer = function(topicID, postID, numVotes) {
+        var upvoteContainer = jQuery('<td/>', {
+            'class' : 'voting-container icon-2x icon-muted'
+        });
+
+        var upvoteButton = jQuery('<i/>', {
+            'class' : 'upvote-icon icon-thumbs-up'
+        });
+
+        var voteCount = jQuery('<span/>', {
+            'class' : 'vote-count',
+            'text' : String(numVotes)
+        });
+
+        /* Style changes on hover */
+        upvoteContainer.hover(function(){
+            upvoteContainer.removeClass("icon-muted");
+        },function(){
+            upvoteContainer.addClass("icon-muted");
+        });
+
+        /* Up-vote button actions */
+        upvoteButton.click(function() {
+            $.post("/topic/" + topicID + (postID ? "/reply/" + postID : "")  + "/upvote", function(data) {
+                upvoteContainer.removeClass("icon-muted");
+                upvoteContainer.unbind('mouseenter mouseleave');
+                upvoteButton.unbind('click');
+                voteCount.html(data.votes)
+            });
+        });
+        return upvoteContainer.append(upvoteButton,voteCount);
+    };
+
 
     /**
      * Initial get on /topics, populating page.
      */
     $.getJSON("/topic", function(data){
-        //var items = [];
-
-        /* create a new div for each thread*/
-        $.each(data, function(key, value){
-            $('<div id="thread' + key + '"/>').appendTo('#topics');
-            createThread($('#thread' + key), value.title,value.link, true);
-            threadcount++;
-        });
+        var populate = function(parentThread, posts){
+            posts.forEach(function(post) {
+                var childThread = createThread(post.id, post.votes, post.text, post.link);
+                parentThread.append(childThread);
+                populate(childThread, post.replies);
+            });
+        };
+        populate($("#topics"), data);
     });
-
 });

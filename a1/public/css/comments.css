@@ -1,13 +1,18 @@
 .comment-thread {
+  float: left;
+  clear: both;
 	left:	30px;
 	position: relative;
-    margin-top: 30px;
+  margin-top: 20px;
+}
+
+.comment-thread:last-child {
+  margin-bottom: 20px;
 }
 
 .topic-text {
     text-decoration: underline;
     margin-bottom: 0px;
-    margin-top: 20px;
 }
 
 a {
@@ -64,9 +69,15 @@ h1 {
 }
 .voting-container {
     cursor: pointer;
-    display: table-cell;
+    float: left;
+    clear: left;
     vertical-align: middle;
     text-align: right;
+}
+
+.entry-container {
+  float: left;
+  margin-left: 10px;
 }
 
 .upvote-icon {

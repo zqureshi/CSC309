@@ -37,7 +37,8 @@ var routes = {
     new Route('/topic', topic.new),
     new Route('/topic/:tid/reply', topic.reply),
     new Route('/topic/:tid/reply/:rid', topic.reply),
-    new Route('/topic/:tid/reply/:rid/upvote', topic.upvote)
+    new Route('/topic/:tid/reply/:rid/upvote', topic.upvote),
+    new Route('/topic/:tid/upvote', topic.upvote)
   ]
 };
 

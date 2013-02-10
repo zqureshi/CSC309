@@ -10,54 +10,60 @@
 var topics = [
   {
     id: 0,
-    title: 'Hacker News',
+    text: 'Hacker News',
     link: 'http://news.ycombinator.com/',
+    voteWeight: 0,
     votes: 0,
     replies: [
       {
-        id: "0",
+
+        id: "0:0",
         text: 'Reply 0',
         votes: 0,
+        voteWeight: 0,
         replies: [
           {
-            id: "0:0",
+
+            id: "0:0:0",
             text: 'Reply 0.0',
             votes: 0,
+            voteWeight: 0,
             replies: []
           }
         ]
       },
 
       {
-        id: "1",
+        id: "0:1",
         text: 'Reply 1',
         votes: 0,
+        voteWeight: 0,
         replies: []
       }
     ]
   }, {
         id: 1,
-        title: 'News number 2: Jack has lost his surprise :(',
+        text: 'News number 2: Jack has lost his surprise :(',
         link: 'http://news.ycombinator.com/',
         votes: 0,
         replies: [ {
-            id: "0",
+            id: "1:0",
             text: 'Reply 0',
-            votes: 0,
+            voteWeight: 0,
             replies: [
                 {
-                    id: "1:0",
+                    id: "1:0:0",
                     text: 'Reply 0.0',
-                    votes: 0,
+                    voteWeight: 0,
                     replies: []
                 }
             ]
         },
 
             {
-                id: "1",
+                id: "1:1",
                 text: 'Reply 1',
-                votes: 0,
+                voteWeight: 0,
                 replies: []
             }]
     }
@@ -117,13 +123,13 @@ exports.list = function(req, res) {
 exports.new = function(req, res) {
   try {
     var topic = req.body;
-    validateString(topic, 'title');
+    validateString(topic, 'text');
     validateString(topic, 'link');
 
     /* Push Topic and set ID */
     var id = topics.push({
       id: null,
-      title: topic.title,
+      text: topic.text,
       link: topic.link,
       votes: 0,
       replies: []
@@ -162,6 +168,7 @@ exports.get = function(req, res) {
 exports.reply = function(req, res) {
   var tid = req.params.tid;
 
+
   try {
     validateTopicId(tid);
     validateString(req.body, 'text');
@@ -183,15 +190,13 @@ exports.reply = function(req, res) {
       id: null,
       text: req.body.text,
       votes: 0,
+      voteWeight : 0,
       replies: []
     }) - 1;
 
     /* Calculate and update reply id */
-    if(parent != topic) {
-      parent.replies[id].id = parent.id + ':' + id;
-    } else {
-      parent.replies[id].id = id;
-    }
+    parent.replies[id].id = parent.id + ':' + id;
+
 
     res.json(parent.replies[id]);
   } catch(e) {
@@ -210,11 +215,10 @@ exports.upvote = function(req, res) {
 
   try {
     validateTopicId(tid);
-    validateString(req.params, 'rid');
 
-    /* Traverse path and store each element */
+    /* Traverse thread to find comment to upvote */
     var parent = topic = topics[tid];
-    var path = req.params.rid.split(':');
+    var path = req.params.rid != undefined ? req.params.rid.split(':') : [];
     var thread = [topic];
     while(path.length > 0) {
       var reply = parent.replies[path.shift()];
@@ -226,10 +230,12 @@ exports.upvote = function(req, res) {
       }
     }
 
-    /* Upvote each element in path */
-    thread.forEach(function(reply) {
-      reply.votes += 1;
+    /* Update the vote weight of elements in path */
+    thread.forEach(function(child) {
+      child.voteWeight += 1;
     });
+
+    thread[thread.length - 1].votes += 1;
 
     res.json(thread.pop());
   } catch(e) {

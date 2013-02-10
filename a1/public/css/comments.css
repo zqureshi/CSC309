@@ -1,12 +1,18 @@
-.replies-container {
+.comment-thread {
+  float: left;
+  clear: both;
 	left:	30px;
 	position: relative;
+  margin-top: 20px;
 }
 
-.root-comment {
+.comment-thread:last-child {
+  margin-bottom: 20px;
+}
+
+.topic-text {
     text-decoration: underline;
     margin-bottom: 0px;
-    margin-top: 20px;
 }
 
 a {
@@ -29,10 +35,12 @@ input, textarea {
 .comment-box {
     width: 300px;
     height: 70px;
+    margin-top: 30px;
 }
 
 .comment-editor * {
     display: block;
+    margin-left: 45px;
 }
 
 .page-header {
@@ -52,12 +60,29 @@ h1 {
     top: 0;
 }
 
+.post-link {
+    display: block;
+}
+.voting-container {
+    cursor: pointer;
+    float: left;
+    clear: left;
+    vertical-align: middle;
+    text-align: right;
+}
+
+.entry-container {
+  float: left;
+  margin-left: 10px;
+}
+
 .upvote-icon {
-    display: inline-block;
+    display: block;
 }
 
 div#topics {
     margin-top: 120px;
+    margin-bottom: 100px;
 }
 
 form#new-topic-form {

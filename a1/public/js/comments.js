@@ -1,12 +1,4 @@
 $(document).ready(function(){
-    /**
-     * Tracks the number of root threads.
-     * @type {Number}
-     */
-    var threadcount = 0;
-
-    //hidden unless in use
-    $("#new-topic-form").hide();
 
     /**
      * Event Handler for the New Topic Button.
@@ -210,11 +202,26 @@ $(document).ready(function(){
         return upvoteContainer.append(upvoteButton,voteCount);
     };
 
+    /**
+     * Sorts the posts and their comments by the total number of votes in the thread.
+     *
+     * @param posts {Array} an array of posts
+     */
+    var sortPosts = function(posts) {
+        posts.sort(function(a, b) {
+            return b.voteWeight - a.voteWeight;
+        });
+
+        posts.forEach(function(post) {
+            sortPosts(post.replies);
+        });
+    };
 
     /**
      * Initial get on /topics, populating page.
      */
     $.getJSON("/topic", function(data){
+        sortPosts(data);
         var populate = function(parentThread, posts){
             posts.forEach(function(post) {
                 var childThread = createThread(post.id, post.votes, post.text, post.link);

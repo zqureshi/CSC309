@@ -25,6 +25,7 @@ var topics = [
             id: "0:0:0",
             text: 'Reply 1.1',
             votes: 0,
+            voteWeight: 0,
             replies: []
           }
         ]
@@ -34,14 +35,16 @@ var topics = [
         id: "0:1",
         text: 'Reply 2',
         votes: 0,
+        voteWeight: 0,
         replies: []
       }
     ]
   }, {
         id: 1,
-        title: 'News number 2: Jack has lost his surprise :(',
+        text: 'News number 2: Jack has lost his surprise :(',
         link: 'http://news.ycombinator.com/',
         votes: 0,
+        voteWeight: 0,
         replies: []
     }
 ];
@@ -191,11 +194,10 @@ exports.upvote = function(req, res) {
 
   try {
     validateTopicId(tid);
-    validateString(req.params, 'rid');
 
-    /* Traverse path and store each element */
+    /* Traverse thread to find comment to upvote */
     var parent = topic = topics[tid];
-    var path = req.params.rid.split(':');
+    var path = req.params.rid != undefined ? req.params.rid.split(':') : [];
     var thread = [topic];
     while(path.length > 0) {
       var reply = parent.replies[path.shift()];
@@ -207,10 +209,12 @@ exports.upvote = function(req, res) {
       }
     }
 
-    /* Upvote each element in path */
-    thread.forEach(function(reply) {
-      reply.votes += 1;
+    /* Update the vote weight of elements in path */
+    thread.forEach(function(child) {
+      child.voteWeight += 1;
     });
+
+    thread[thread.length - 1].votes += 1;
 
     res.json(thread.pop());
   } catch(e) {

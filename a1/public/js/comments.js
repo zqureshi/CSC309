@@ -170,7 +170,7 @@ $(document).ready(function(){
      * @returns {jQuery} a div element with the class 'voting-container'
      */
     var createUpvoteContainer = function(topicID, postID, numVotes) {
-        var upvoteContainer = jQuery('<td/>', {
+        var upvoteContainer = jQuery('<div/>', {
             'class' : 'voting-container icon-2x icon-muted'
         });
 

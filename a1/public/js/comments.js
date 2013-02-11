@@ -193,9 +193,13 @@ $(document).ready(function () {
                 'maxlength':140
             });
             var saveCommentBtn = $('<button/>', {
-                'text':'save',
+                'text':' save',
                 'class':'save-reply-button btn'
             });
+
+            saveCommentBtn.prepend($('<i/>', {
+              'class': 'icon-reply',
+            }));
             commentEditor.append(textBox, saveCommentBtn);
             footer.append(commentEditor);
             footerButtons.hide();

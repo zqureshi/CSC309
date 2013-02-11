@@ -83,6 +83,16 @@ h1 {
     font-size: 1.7em;
 }
 
+.vote-weight {
+    color: rgba(191, 90, 72, 0.69);
+    font-weight: bold;
+}
+
+.weight-container {
+    color: #ababab;
+    font-weight: bold;
+}
+
 div#topics {
     margin-top: 120px;
     margin-bottom: 100px;

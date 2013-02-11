@@ -118,7 +118,7 @@ $(document).ready(function () {
         }
 
         /* generate upvote area and footer with reply button*/
-        var upvoteContainer = createUpvoteContainer(topicID, postID, numVotes, voteWeight);
+        var upvoteContainer = createUpvoteContainer(topicID, postID, numVotes,(isTopic ? voteWeight : null));
         var footer = createFooter(topicID, postID);
 
         /* prevent upvoting from collapsing replies*/
@@ -230,10 +230,10 @@ $(document).ready(function () {
             'class':'vote-count',
             'text':String(numVotes)
         });
-        var voteWeight = $('<span/>', {
-            'class':'vote-count',
-            'text':String(voteWeight) + ' | '
-        });
+        var voteWeight = voteWeight ? $('<span/>', {
+            'class':'weight-container',
+            'html':'<span class="vote-weight">' + voteWeight + '</span> | '
+        }) : '';
 
         /* Style changes on hover */
         upvoteButton.hover(function () {
@@ -249,7 +249,8 @@ $(document).ready(function () {
                 upvoteButton.unbind('mouseenter mouseleave');
                 upvoteButton.unbind('click');
                 voteCount.html(data.votes);
-                voteWeight.html(data.voteWeight + ' | ');
+                var topicWeight = upvoteButton.parents('.comment-thread').find('.vote-weight');
+                topicWeight.html(parseInt(topicWeight.html()) + 1);
             });
         });
         return upvoteContainer.append(upvoteButton, voteWeight, voteCount);

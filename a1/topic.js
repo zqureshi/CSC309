@@ -10,22 +10,22 @@
 var topics = [
   {
     id: 0,
-    text: 'Hacker News',
-    link: 'http://news.ycombinator.com/',
+    text: "I am Jack's Complete Lack of surprise. AMA.",
+    link: 'http://25.media.tumblr.com/tumblr_ligc5fecSK1qav29fo1_r1_500.gif',
     voteWeight: 0,
     votes: 0,
     replies: [
       {
 
         id: "0:0",
-        text: 'Reply 0',
+        text: 'I am the nameless narrator.',
         votes: 0,
         voteWeight: 0,
         replies: [
           {
 
             id: "0:0:0",
-            text: 'Reply 0.0',
+            text: 'Jack or Tyler???!?!11',
             votes: 0,
             voteWeight: 0,
             replies: []
@@ -35,37 +35,66 @@ var topics = [
 
       {
         id: "0:1",
-        text: 'Reply 1',
+        text: "I am Jack's smirking revenge.",
         votes: 0,
         voteWeight: 0,
-        replies: []
-      }
+        replies: [
+            {
+                id: "0:1:0",
+                text: 'http://static.tumblr.com/eimlqnz/7gym85211/tumblr_lkotx0ojxa1qcnxvno1_500.gif',
+                voteWeight: 0,
+                votes: 0,
+                replies: []
+}]
+            },
+            {
+            id: "0:1:1",
+            text: '+1',
+            voteWeight: 0,
+            votes: 0,
+            replies: [
+                {
+                    id: "0:1:1:0",
+                    text: "bro there's a button for that.",
+                    voteWeight: 0,
+                    votes: 0,
+                    replies: []
+                }
+            ]
+            }
+
     ]
   }, {
         id: 1,
         text: 'News number 2: Jack has lost his surprise :(',
-        link: 'http://news.ycombinator.com/',
+        link: 'http://www.lostandfound.ca',
         votes: 0,
         voteWeight : 0,
         replies: [ {
             id: "1:0",
-            text: 'Reply 0',
+            text: "founddd it. It's been hiding out on blogspot since 2008: http://jackslackofsurprise.blogspot.ca/",
             votes: 0,
             voteWeight: 0,
             replies: [
                 {
                     id: "1:0:0",
-                    text: 'Reply 0.0',
+                    text: 'Excellent hiding place. No one would ever look there anyways. #teamWordpress',
                     votes: 0,
                     voteWeight: 0,
-                    replies: []
+                    replies: [{
+                        id: "1:0:0:0",
+                        text: 'AHEM. #teamTumblr',
+                        votes: 0,
+                        voteWeight: 0,
+                        replies: []
+                    }]
                 }
             ]
         },
 
             {
                 id: "1:1",
-                text: 'Reply 1',
+                text: 'as if there is a national lost and found site.',
                 voteWeight: 0,
                 votes: 0,
                 replies: []

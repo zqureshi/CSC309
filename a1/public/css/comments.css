@@ -93,8 +93,4 @@ form#new-topic-form {
     left: -80px;
 }
 
-div[id*=":"] {
-    display: none;
-}
-
 

@@ -12,7 +12,7 @@ $(document).ready(function () {
      */
     $('html').click(function () {
         $('#new-topic-form').hide();
-        $('[id*=":"]').hide();
+        $('[id*=":"].comment-thread').hide();
         $('.comment-editor').hide();
         $('.reply-button').show();
     });
@@ -80,7 +80,9 @@ $(document).ready(function () {
         if (id.indexOf(':') == -1){
             /* toggle replies when topic text clicked */
             post.find('.topic-text').click(function () {
-                thread.find('[id*=":"]').toggle('fast');
+                thread.find('[id^="thread"]').toggle('fast');
+                $('.comment-editor').hide();
+                $('.reply-button').show();
             });
 
             /* expand replies if "reply" button is clicked*/
@@ -190,8 +192,10 @@ $(document).ready(function () {
                     var onSuccess = function (data) {
                         commentEditor.remove();
                         replyButton.show();
-                        var parent = $('#thread' + topicID + (postID ? '\\:' + postID.replace(/\:/g, '\\:') : ''));
-                        parent.append(createThread(data.id, String(data.votes), data.text, null));
+                        var reply = createThread(data.id, String(data.votes), data.text, null) ;
+     //                   reply.css("display", "block");
+                        console.log(reply);
+                        $('#thread' + topicID + (postID ? '\\:' + postID.replace(/\:/g, '\\:') : '')).append(reply);
                     };
                     var url = '/topic/' + topicID + '/reply' + (postID ? '/' + postID : '');
                     $.post(url, {'text':textBox.val()}, function (result) {
@@ -267,6 +271,9 @@ $(document).ready(function () {
         var populate = function (parentThread, posts) {
             posts.forEach(function (post) {
                 var childThread = createThread(post.id, post.votes, post.text, post.link);
+                if(!post.link){
+                    childThread.css('display', 'none');
+                }
                 parentThread.append(childThread);
                 populate(childThread, post.replies);
             });

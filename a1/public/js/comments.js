@@ -49,7 +49,7 @@ $(document).ready(function () {
         posting.done(function (data) {
 
             $('#new-topic-form')[0].reset();
-            $('#topics').append(createThread(data.id, data.votes, data.text, data.link));
+            $('#topics').append(createThread(data.id, data.votes, data.voteWeight, data.text, data.link));
             $('html, body').animate({
                 scrollTop:$('#thread' + String(data.id).replace(/:/g, '\\:')).offset().top
             }, 1000);
@@ -67,7 +67,7 @@ $(document).ready(function () {
      * @param url {String} the url which will be displayed if the comment is a Topic
      * @returns {jQuery} a div element with the class 'comment-thread' and the id 'thread' + id
      */
-    var createThread = function (id, numVotes, text, url) {
+    var createThread = function (id, numVotes, voteWeight, text, url) {
         id = String(id);
 
         var thread = $('<div/>', {
@@ -75,7 +75,7 @@ $(document).ready(function () {
             'id':'thread' + id
         });
 
-        var post = createPost(id, numVotes, text, url);
+        var post = createPost(id, numVotes, voteWeight, text, url);
 
         if (id.indexOf(':') == -1){
             /* toggle replies when topic text clicked */
@@ -103,7 +103,7 @@ $(document).ready(function () {
      * @param url {String} the url which will be displayed if the comment is a Topic
      * @returns {jQuery} a div element with the class 'post' and the id 'post' + id
      */
-    var createPost = function (id, numVotes, text, url) {
+    var createPost = function (id, numVotes,voteWeight, text, url) {
         var isTopic = id.indexOf(':') == -1;
 
         /* Find the topicID and the postID from the full id */
@@ -118,7 +118,7 @@ $(document).ready(function () {
         }
 
         /* generate upvote area and footer with reply button*/
-        var upvoteContainer = createUpvoteContainer(topicID, postID, numVotes);
+        var upvoteContainer = createUpvoteContainer(topicID, postID, numVotes, voteWeight);
         var footer = createFooter(topicID, postID);
 
         /* prevent upvoting from collapsing replies*/
@@ -192,7 +192,7 @@ $(document).ready(function () {
                     var onSuccess = function (data) {
                         commentEditor.remove();
                         replyButton.show();
-                        var reply = createThread(data.id, String(data.votes), data.text, null) ;
+                        var reply = createThread(data.id, String(data.votes), data.voteWeight, data.text, null) ;
      //                   reply.css("display", "block");
                         console.log(reply);
                         var selector = '#thread' + topicID + (postID ? '\\:' + postID.replace(/:/g, '\\:') : '');
@@ -219,37 +219,40 @@ $(document).ready(function () {
      * @param numVotes {Number} the number of times this comment has been up-voted
      * @returns {jQuery} a div element with the class 'voting-container'
      */
-    var createUpvoteContainer = function (topicID, postID, numVotes) {
+    var createUpvoteContainer = function (topicID, postID, numVotes, voteWeight) {
         var upvoteContainer = $('<div/>', {
-            'class':'voting-container icon-muted'
+            'class':'voting-container'
         });
-
         var upvoteButton = $('<i/>', {
-            'class':'upvote-icon icon-thumbs-up icon-large'
+            'class':'upvote-icon icon-thumbs-up icon-muted'
         });
-
         var voteCount = $('<span/>', {
             'class':'vote-count',
             'text':String(numVotes)
         });
+        var voteWeight = $('<span/>', {
+            'class':'vote-count',
+            'text':String(voteWeight) + ' | '
+        });
 
         /* Style changes on hover */
-        upvoteContainer.hover(function () {
-            upvoteContainer.removeClass('icon-muted');
+        upvoteButton.hover(function () {
+            upvoteButton.removeClass('icon-muted');
         }, function () {
-            upvoteContainer.addClass('icon-muted');
+            upvoteButton.addClass('icon-muted');
         });
 
         /* Up-vote button actions */
         upvoteButton.click(function () {
             $.post('/topic/' + topicID + (postID ? '/reply/' + postID : '') + '/upvote', function (data) {
-                upvoteContainer.removeClass('icon-muted');
-                upvoteContainer.unbind('mouseenter mouseleave');
+                upvoteButton.removeClass('icon-muted');
+                upvoteButton.unbind('mouseenter mouseleave');
                 upvoteButton.unbind('click');
-                voteCount.html(data.votes)
+                voteCount.html(data.votes);
+                voteWeight.html(data.voteWeight + ' | ');
             });
         });
-        return upvoteContainer.append(upvoteButton, voteCount);
+        return upvoteContainer.append(upvoteButton, voteWeight, voteCount);
     };
 
     /**
@@ -274,7 +277,7 @@ $(document).ready(function () {
         sortPosts(data);
         var populate = function (parentThread, posts) {
             posts.forEach(function (post) {
-                var childThread = createThread(post.id, post.votes, post.text, post.link);
+                var childThread = createThread(post.id, post.votes, post.voteWeight, post.text, post.link);
                 if(!post.link){
                     childThread.css('display', 'none');
                 }

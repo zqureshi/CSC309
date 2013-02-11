@@ -12,15 +12,15 @@ var topics = [
         id:0,
         text:"I am Jack's Complete Lack of surprise. AMA.",
         link:'http://25.media.tumblr.com/tumblr_ligc5fecSK1qav29fo1_r1_500.gif',
-        voteWeight:0,
+        voteWeight:15,
         votes:0,
         replies:[
             {
 
                 id:"0:0",
                 text:'I am the nameless narrator.',
-                votes:0,
-                voteWeight:0,
+                votes:5,
+                voteWeight:5,
                 replies:[
                     {
 
@@ -36,26 +36,26 @@ var topics = [
             {
                 id:"0:1",
                 text:"I am Jack's smirking revenge.",
-                votes:0,
-                voteWeight:0,
+                votes:5,
+                voteWeight:10,
                 replies:[
                     {
                         id:"0:1:0",
                         text:'http://static.tumblr.com/eimlqnz/7gym85211/tumblr_lkotx0ojxa1qcnxvno1_500.gif',
-                        voteWeight:0,
                         votes:0,
+                        voteWeight:5,
                         replies:[
                             {
                                 id:"0:1:0:0",
                                 text:'+1',
-                                voteWeight:0,
                                 votes:1,
+                                voteWeight:5,
                                 replies:[
                                     {
                                         id:"0:1:0:0:0",
                                         text:"bro there's a button for that.",
-                                        voteWeight:0,
                                         votes:4,
+                                        voteWeight:4,
                                         replies:[]
                                     }
                                 ]
@@ -71,31 +71,31 @@ var topics = [
         text:'News number 2: Jack has lost his surprise :(',
         link:'http://www.lostandfound.ca',
         votes:2,
-        voteWeight:0,
+        voteWeight:32   ,
         replies:[
             {
                 id:"1:0",
                 text:"founddd it. It's been hiding out on blogspot since 2008:http://jackslackofsurprise.blogspot.ca/",
                 votes:5,
-                voteWeight:0,
+                voteWeight:29,
                 replies:[
                     {
                         id:"1:0:0",
                         text:'Excellent hiding place. No one would ever look there anyways. #teamWordpress',
                         votes:10,
-                        voteWeight:0,
+                        voteWeight:24,
                         replies:[
                             {
                                 id:"1:0:0:0",
                                 text:'AHEM. #teamTumblr',
                                 votes:7,
-                                voteWeight:0,
+                                voteWeight:14,
                                 replies:[
                                     {
                                         id:"1:0:0:0:0",
                                         text:'tumblrrr',
                                         votes:7,
-                                        voteWeight:5,
+                                        voteWeight:7,
                                         replies:[]
                                     }
                                 ]
@@ -108,8 +108,8 @@ var topics = [
             {
                 id:"1:1",
                 text:'as if there is a national lost and found site.',
-                voteWeight:0,
-                votes:0,
+                voteWeight:1,
+                votes:1,
                 replies:[]
             }
         ]

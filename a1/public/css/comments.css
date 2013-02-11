@@ -79,6 +79,8 @@ h1 {
 
 .upvote-icon {
     display: block;
+    padding-left: 6px;
+    font-size: 1.7em;
 }
 
 div#topics {

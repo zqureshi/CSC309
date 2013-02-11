@@ -109,7 +109,7 @@ $(document).ready(function () {
         } else {
             var topicIndex = id.indexOf(':');
             topicID = id.substring(0, topicIndex);
-            postID = id.substring(topicIndex + 1)
+            postID = id.substring(topicIndex + 1);
         }
 
         /* generate upvote area and footer with reply button*/
@@ -221,7 +221,7 @@ $(document).ready(function () {
                             scrollTop:$(selector).offset().top
                         }, 1000);
                     };
-                    var url = '/topic/' + topicID + '/reply' + (postID ? '/' + postID : '');
+                    var url = '/topic/' + topicID + '/reply' + (postID ? '/' + topicID + ':' + postID : '');
                     $.post(url, {'text':textBox.val()}, function (result) {
                         onSuccess(result)
                     });
@@ -281,7 +281,7 @@ $(document).ready(function () {
 
         /* Up-vote button actions */
         upvoteButton.click(function () {
-            $.post('/topic/' + topicID + (postID ? '/reply/' + postID : '') + '/upvote', function (data) {
+            $.post('/topic/' + topicID + (postID ? '/reply/' + topicID + ':' + postID : '') + '/upvote', function (data) {
                 upvoteButton.removeClass('icon-muted');
                 upvoteButton.unbind('mouseenter mouseleave');
                 upvoteButton.unbind('click');

@@ -1,3 +1,5 @@
+var assert = require('assert');
+
 /**
  * Topic REST API
  */
@@ -223,7 +225,8 @@ exports.reply = function (req, res) {
 
         /* Traverse thread to find parent to reply to */
         var parent = topic = topics[tid];
-        var path = req.params.rid != undefined ? req.params.rid.split(':') : [];
+        var path = req.params.rid ? req.params.rid.split(':') : [tid];
+        assert(tid == path.shift(), 'Invalid Topic');
         while (path.length > 0) {
             var rid = path.shift();
             if (parent.replies[rid] != undefined) {
@@ -266,7 +269,8 @@ exports.upvote = function (req, res) {
 
         /* Traverse thread to find comment to upvote */
         var parent = topic = topics[tid];
-        var path = req.params.rid != undefined ? req.params.rid.split(':') : [];
+        var path = req.params.rid ? req.params.rid.split(':') : [tid];
+        assert(tid == path.shift(), 'Invalid Topic');
         var thread = [topic];
         while (path.length > 0) {
             var reply = parent.replies[path.shift()];

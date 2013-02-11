@@ -12,7 +12,6 @@ $(document).ready(function () {
      */
     $('html').click(function () {
         $('#new-topic-form').hide();
-        $('[id*=":"].comment-thread').hide();
         $('.comment-editor').hide();
         $('.reply-button').show();
     });
@@ -63,6 +62,7 @@ $(document).ready(function () {
      * @param id {String} the id of the thread, which also specifies the ids of parents
      *     threads, all the way to the root. Use colons to separate the parent ids. E.g. 1:1:3:2
      * @param numVotes {Number} the number of times this comment was up-voted
+     * @param voteWeight {Number} the cumulative number of upvotes on the post and its replies
      * @param text {String} the text inside the comment
      * @param url {String} the url which will be displayed if the comment is a Topic
      * @returns {jQuery} a div element with the class 'comment-thread' and the id 'thread' + id
@@ -80,14 +80,15 @@ $(document).ready(function () {
         if (id.indexOf(':') == -1){
             /* toggle replies when topic text clicked */
             post.find('.topic-text').click(function () {
-                thread.find('[id^="thread"]').toggle('fast');
+                toggleCollapse(id);
                 $('.comment-editor').hide();
-                $('.reply-button').show();
+                $('.footer-buttons').show();
             });
 
             /* expand replies if "reply" button is clicked*/
             post.find('.reply-button').click(function () {
-                thread.find('[id*=":"]').show();
+                if(thread.attr("collapsed") != 'false')
+                toggleCollapse(id);
             });
         }
 
@@ -99,11 +100,12 @@ $(document).ready(function () {
      *
      * @param id {String} the id of the post, which matches the thread id
      * @param numVotes {Number} the number of times this comment was up-voted
+     * @param voteWeight {Number} the cumulative number of upvotes on the post and its replies
      * @param text {String} the text inside the comment
      * @param url {String} the url which will be displayed if the comment is a Topic
      * @returns {jQuery} a div element with the class 'post' and the id 'post' + id
      */
-    var createPost = function (id, numVotes,voteWeight, text, url) {
+    var createPost = function (id, numVotes, voteWeight, text, url) {
         var isTopic = id.indexOf(':') == -1;
 
         /* Find the topicID and the postID from the full id */
@@ -158,16 +160,23 @@ $(document).ready(function () {
         var footer = $('<div/>', {
             'class':'post-footer'
         });
+
+        var footerButtons = $('<div/>', {
+            'class':'footer-buttons'
+        });
+
         var replyButton = $('<a/>', {
             'class':'reply-button',
             'text':'reply'
         });
 
+        footerButtons.append(replyButton);
+
         /* Reply button actions*/
         replyButton.click(function () {
             /* Hide all active comment editors */
             $('.comment-editor').hide();
-            $('.reply-button').show();
+            $('.footer-buttons').show();
 
             /* Create new editor */
             var commentEditor = $('<div/>', {
@@ -183,7 +192,7 @@ $(document).ready(function () {
             });
             commentEditor.append(textBox, saveCommentBtn);
             footer.append(commentEditor);
-            replyButton.hide();
+            footerButtons.hide();
 
             /* Saving the comment */
             saveCommentBtn.click(function () {
@@ -191,9 +200,8 @@ $(document).ready(function () {
 
                     var onSuccess = function (data) {
                         commentEditor.remove();
-                        replyButton.show();
-                        var reply = createThread(data.id, String(data.votes), data.voteWeight, data.text, null) ;
-     //                   reply.css("display", "block");
+                        footerButtons.show();
+                        var reply = createThread(data.id, String(data.votes), data.voteWeight, data.text, null);
                         console.log(reply);
                         var selector = '#thread' + topicID + (postID ? '\\:' + postID.replace(/:/g, '\\:') : '');
                         $(selector).append(reply);
@@ -208,7 +216,19 @@ $(document).ready(function () {
                 }
             });
         });
-        return footer.append(replyButton);
+
+        if(!postID) {
+
+            var collapseExpandButton = $('<a/>', {
+                'class':'expand-collapse-button'
+            });
+            collapseExpandButton.click(function() {
+                toggleCollapse(topicID);
+            });
+            footerButtons.append(collapseExpandButton);
+        }
+
+        return footer.append(footerButtons);
     };
 
     /**
@@ -217,6 +237,7 @@ $(document).ready(function () {
      * @param topicID {String} the id of the topic, under which this comment exists
      * @param postID {String} the path from the topic to the comment (not includeing the comment), separated by colons.
      * @param numVotes {Number} the number of times this comment has been up-voted
+     * @param voteWeight {Number} the cumulative number of upvotes on the post and its replies
      * @returns {jQuery} a div element with the class 'voting-container'
      */
     var createUpvoteContainer = function (topicID, postID, numVotes, voteWeight) {
@@ -230,7 +251,7 @@ $(document).ready(function () {
             'class':'vote-count',
             'text':String(numVotes)
         });
-        var voteWeight = $('<span/>', {
+        var voteWeightDisplay = $('<span/>', {
             'class':'vote-count',
             'text':String(voteWeight) + ' | '
         });
@@ -249,10 +270,24 @@ $(document).ready(function () {
                 upvoteButton.unbind('mouseenter mouseleave');
                 upvoteButton.unbind('click');
                 voteCount.html(data.votes);
-                voteWeight.html(data.voteWeight + ' | ');
+                voteWeightDisplay.html(data.voteWeight + ' | ');
             });
         });
-        return upvoteContainer.append(upvoteButton, voteWeight, voteCount);
+        return upvoteContainer.append(upvoteButton, voteWeightDisplay, voteCount);
+    };
+
+    var toggleCollapse = function(topicID) {
+        var topic = $("#thread" + topicID);
+        if(topic.attr("collapsed") == "true") {
+            topic.find('[id*=":"]').show();
+            topic.attr("collapsed", "false");
+            $("#post" + topicID).find(".expand-collapse-button").html("hide comments");
+        }
+        else {
+            topic.find('[id*=":"]').hide();
+            topic.attr("collapsed", "true");
+            $("#post" + topicID).find(".expand-collapse-button").html("show comments");
+        }
     };
 
     /**
@@ -286,6 +321,9 @@ $(document).ready(function () {
             });
         };
         populate($('#topics'), data);
+        data.forEach(function(topic) {
+            toggleCollapse(topic.id);
+        })
     });
 
 });

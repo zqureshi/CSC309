@@ -195,7 +195,11 @@ $(document).ready(function () {
                         var reply = createThread(data.id, String(data.votes), data.text, null) ;
      //                   reply.css("display", "block");
                         console.log(reply);
-                        $('#thread' + topicID + (postID ? '\\:' + postID.replace(/\:/g, '\\:') : '')).append(reply);
+                        var selector = '#thread' + topicID + (postID ? '\\:' + postID.replace(/:/g, '\\:') : '');
+                        $(selector).append(reply);
+                        $('html, body').animate({
+                            scrollTop:$(selector).offset().top
+                        }, 1000);
                     };
                     var url = '/topic/' + topicID + '/reply' + (postID ? '/' + postID : '');
                     $.post(url, {'text':textBox.val()}, function (result) {

@@ -23,11 +23,12 @@ a {
     margin-bottom: 10px;
 }
 
-.reply-button {
+.footer-buttons * {
     color: #888888;
     font-weight: bold;
     padding: 0 1px;
     cursor: default;
+    margin-right: 10px;
 }
 
 input, textarea {
@@ -84,7 +85,7 @@ h1 {
 }
 
 .vote-weight {
-    color: rgba(191, 90, 72, 0.69);
+    color: #888888;
     font-weight: bold;
 }
 

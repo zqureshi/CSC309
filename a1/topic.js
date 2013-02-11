@@ -178,6 +178,7 @@ exports.new = function (req, res) {
             id:null,
             text:topic.text,
             link:topic.link,
+            voteWeight:0,
             votes:0,
             replies:[]
         }) - 1;

@@ -217,11 +217,11 @@ $(document).ready(function () {
      */
     var createUpvoteContainer = function (topicID, postID, numVotes) {
         var upvoteContainer = $('<div/>', {
-            'class':'voting-container icon-2x icon-muted'
+            'class':'voting-container icon-muted'
         });
 
         var upvoteButton = $('<i/>', {
-            'class':'upvote-icon icon-thumbs-up'
+            'class':'upvote-icon icon-thumbs-up icon-large'
         });
 
         var voteCount = $('<span/>', {

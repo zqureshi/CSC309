@@ -13,6 +13,7 @@
 .topic-text {
     text-decoration: underline;
     margin-bottom: 0px;
+    cursor: default;
 }
 
 a {
@@ -26,6 +27,7 @@ a {
     color: #888888;
     font-weight: bold;
     padding: 0 1px;
+    cursor: default;
 }
 
 input, textarea {

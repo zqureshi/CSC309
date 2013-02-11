@@ -1,6 +1,6 @@
 /**
  * Populate the Topic backend.
- *//*
+ */
 
 
 var request = require('request')
@@ -13,13 +13,12 @@ function postTopic(title, link) {
   request.post(apiUrl + '/topic', function(err, res, body){ if(err) throw err; }).form({'title': title, 'link': link});
 }
 
-*/
-/* Clear Topics *//*
+/* Clear Topics */
 
 request.get(apiUrl + '/clear', function(error, response, body){
-  */
-/* Populate Topics *//*
+
+/* Populate Topics */
 
   postTopic('Do Not Type "File:///" in OS X', 'http://openradar.appspot.com/13128709')
 });
-*/
+

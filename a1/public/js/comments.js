@@ -129,7 +129,8 @@ $(document).ready(function () {
         var link = isTopic && url ? $('<a/>', {
             'class':'post-link',
             'text':'| ' + url.substring(0, 30) + (url.length > 30 ? '...' : ''),
-            'href':url
+            'href':url,
+            'target':'_blank'
         }) : '';
         var entryContainer = $('<div/>', {
             'class':'entry-container'

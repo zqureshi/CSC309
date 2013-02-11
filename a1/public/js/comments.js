@@ -288,12 +288,12 @@ $(document).ready(function () {
         if(topic.attr("collapsed") == "true") {
             topic.find('[id*=":"]').show();
             topic.attr("collapsed", "false");
-            $("#post" + topicID).find(".expand-collapse-button").html("hide comments");
+            $("#post" + topicID).find(".expand-collapse-button").html("<i class=\"icon-chevron-up\" style=\"margin-right:3px;\"></i>hide comments");
         }
         else {
             topic.find('[id*=":"]').hide();
             topic.attr("collapsed", "true");
-            $("#post" + topicID).find(".expand-collapse-button").html("show comments");
+            $("#post" + topicID).find(".expand-collapse-button").html("<i class=\"icon-chevron-down\" style=\"margin-right:3px;\"></i>show comments");
         }
     };
 

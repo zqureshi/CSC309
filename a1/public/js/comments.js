@@ -8,26 +8,14 @@ $(document).ready(function () {
     });
 
     /**
-     * Collapses new topic form, comment editor, and all expanded replies.
+     * Hides the topic editor on click outside of the header.
      */
-    $('html').click(function () {
-        $('#new-topic-form').hide();
-        $('.comment-editor').hide();
-        $('.reply-button').show();
-    });
-
-    /**
-     * Prevents new topic form from being hidden on header click.
-     */
-    $('.header-container').click(function (event) {
-        event.stopPropagation();
-    });
-
-    /**
-     * Prevents replies from collapsing on container click.
-     */
-    $('.container').click(function (event) {
-        event.stopPropagation();
+    $('html').click(function (e) {
+        var target = $(e.target);
+        var isHeader = target.is(".header-container") || target.parents().is(".header-container");
+        if(!isHeader) {
+            $('#new-topic-form').hide();
+        }
     });
 
     /**
@@ -53,6 +41,11 @@ $(document).ready(function () {
                 scrollTop:$('#thread' + String(data.id).replace(/:/g, '\\:')).offset().top
             }, 1000);
         });
+    });
+
+    $('#topic-cancel-button').click(function (event) {
+
+        $('#new-topic-form').hide('fast');
     });
 
     /**
@@ -181,8 +174,12 @@ $(document).ready(function () {
         /* Reply button actions*/
         replyButton.click(function () {
             /* Hide all active comment editors */
-            $('.comment-editor').hide();
-            $('.footer-buttons').show();
+            var hideEditors = function() {
+                $('.comment-editor').hide();
+                $('.footer-buttons').show();
+            };
+
+            hideEditors();
 
             /* Create new editor */
             var commentEditor = $('<div/>', {
@@ -192,25 +189,30 @@ $(document).ready(function () {
                 'class':'comment-box',
                 'maxlength':140
             });
+
+            var cancelBtn = $('<button/>', {
+                'text':'cancel',
+                'class':'cancel-reply-button btn'
+            });
+
             var saveCommentBtn = $('<button/>', {
                 'text':' save',
                 'class':'save-reply-button btn'
             });
 
-            saveCommentBtn.prepend($('<i/>', {
-              'class': 'icon-reply',
-            }));
-            commentEditor.append(textBox, saveCommentBtn);
+            var editorButtons = $('<div/>', {
+                'class':'editor-buttons'
+            }).append(saveCommentBtn, cancelBtn);
+
+            commentEditor.append(textBox, editorButtons);
             footer.append(commentEditor);
             footerButtons.hide();
 
             /* Saving the comment */
             saveCommentBtn.click(function () {
                 if (textBox.val()) {
-
                     var onSuccess = function (data) {
-                        commentEditor.remove();
-                        footerButtons.show();
+                        hideEditors();
                         var reply = createThread(data.id, String(data.votes), data.voteWeight, data.text, null);
                         console.log(reply);
                         var selector = '#thread' + topicID + (postID ? '\\:' + postID.replace(/:/g, '\\:') : '');
@@ -224,6 +226,10 @@ $(document).ready(function () {
                         onSuccess(result)
                     });
                 }
+            });
+
+            cancelBtn.click(function() {
+                hideEditors();
             });
         });
 
@@ -261,7 +267,7 @@ $(document).ready(function () {
             'class':'vote-count',
             'text':String(numVotes)
         });
-        var voteWeight = voteWeight ? $('<span/>', {
+        var voteWeightDisplay = voteWeight ? $('<span/>', {
             'class':'weight-container',
             'html':'<span class="vote-weight">' + voteWeight + '</span> | '
         }) : '';
@@ -284,7 +290,7 @@ $(document).ready(function () {
                 topicWeight.html(parseInt(topicWeight.html()) + 1);
             });
         });
-        return upvoteContainer.append(upvoteButton, voteWeight, voteCount);
+        return upvoteContainer.append(upvoteButton, voteWeightDisplay, voteCount);
     };
 
     var toggleCollapse = function(topicID) {

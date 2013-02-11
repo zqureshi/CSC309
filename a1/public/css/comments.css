@@ -29,6 +29,11 @@ a {
     padding: 0 1px;
     cursor: default;
     margin-right: 10px;
+    cursor: pointer;
+}
+
+.footer-buttons a {
+  text-decoration: none;
 }
 
 input, textarea {

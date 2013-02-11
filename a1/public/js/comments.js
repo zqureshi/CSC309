@@ -170,6 +170,12 @@ $(document).ready(function () {
             'text':'reply'
         });
 
+        var replyIcon = $('<i>', {
+          'class': 'icon-comment',
+          'style': 'margin-right: 3px;'
+        });
+
+        replyButton.prepend(replyIcon);
         footerButtons.append(replyButton);
 
         /* Reply button actions*/

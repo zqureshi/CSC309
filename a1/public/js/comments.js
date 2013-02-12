@@ -17,7 +17,7 @@ $(document).ready(function () {
         } else {
           $('#help-chevron').attr('class', 'icon-chevron-down');
         }
-        instructions.toggle();
+        instructions.fadeToggle('fast');
     });
 
     /**

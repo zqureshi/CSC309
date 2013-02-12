@@ -20,6 +20,13 @@
     cursor: pointer;
 }
 
+.name-link {
+    color: rgb(85, 77, 77);
+}
+
+.name-link:hover {
+    text-decoration:none;
+}
 a {
     text-decoration: none;
     font-size: 13px;

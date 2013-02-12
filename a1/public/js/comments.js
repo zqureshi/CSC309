@@ -283,7 +283,7 @@ $(document).ready(function () {
             'class':'vote-count',
             'text':String(numVotes)
         });
-        var voteWeightDisplay = voteWeight ? $('<span/>', {
+        var voteWeightDisplay = voteWeight != undefined ? $('<span/>', {
             'class':'weight-container',
             'html':'<span class="vote-weight">' + voteWeight + '</span> | '
         }) : '';

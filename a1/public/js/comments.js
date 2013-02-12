@@ -11,13 +11,14 @@ $(document).ready(function () {
      * Displays user instructions.
      */
     $('.help-icons').click(function() {
-        if($('#instruction-text').css("display") == 'none'){
+        var instructions = $('#instruction-text');
+        if(instructions.css("display") == 'none'){
             $(this).html('<i class="icon-question-sign"></i><i class = "icon-chevron-up"></i>');
         } else {
             $(this).html('<i class="icon-question-sign"></i><i class = "icon-chevron-down"></i>');
         }
-        $('#instruction-text').toggle();
-    })
+        instructions.toggle();
+    });
 
     /**
      * Hides the topic editor on click outside of the header.
@@ -58,8 +59,7 @@ $(document).ready(function () {
         });
     });
 
-    $('#topic-cancel-button').click(function (event) {
-
+    $('#topic-cancel-button').click(function () {
         $('#new-topic-form').hide('fast');
     });
 

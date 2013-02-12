@@ -3,10 +3,10 @@
  */
 
 
-var request = require('request')
-  , _ = require('underscore');
-
+var request = require('request');
 apiUrl = 'http://localhost:31315';
+
+/* Population data */
 var topics = [
     {
         text:"I am Jack's Complete Lack of surprise. AMA.",
@@ -51,7 +51,7 @@ var topics = [
         ]
     },
     {
-        text:'News number 2: Jack has lost his surprise :(',
+        text:'Breaking news: Jack has lost his surprise :(',
         link:'http://www.lostandfound.ca',
         votes:2,
         replies:[
@@ -88,6 +88,7 @@ var topics = [
     }
 ];
 
+/* Post a topic and all of the replies to that topic*/
 function postTopic(topic) {
     request.post(apiUrl + '/topic', function(err, res, body){
         if(err) {
@@ -103,14 +104,13 @@ function postTopic(topic) {
     }).form({'text': topic.text, 'link': topic.link});
 }
 
+/* Post a comment and all of the replies to that comment */
 function postReply(reply, topicID, replyID) {
     request.post(apiUrl + '/topic/' + topicID +'/reply' + (replyID ? '/' + replyID : ""), function(err, res, body){
         if(err) {
             throw err;
         }
         var json = JSON.parse(body);
-        console.log("this is a reply in the form : " + '/topic/' + topicID +'/reply' + (replyID ? '/' + replyID : "")+ "\n");
-        console.log(json);
         for(var i = 0; i < reply.votes; i++) {
             upvotePost(topicID, json.id)
         }
@@ -120,6 +120,7 @@ function postReply(reply, topicID, replyID) {
     }).form({'text': reply.text, 'link': reply.link});
 }
 
+/* Upvote a post */
 function upvotePost(topicID, replyID) {
     request.post(apiUrl + '/topic/' + topicID + (replyID ? '/reply/' + replyID : "") + '/upvote', function(err, res, body){ if(err) throw err;});
 }

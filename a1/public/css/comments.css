@@ -89,16 +89,6 @@ h1 {
     font-size: 1.7em;
 }
 
-.vote-weight {
-    color: #888888;
-    font-weight: bold;
-}
-
-.weight-container {
-    color: #ababab;
-    font-weight: bold;
-}
-
 div#topics {
     margin-top: 120px;
     margin-bottom: 100px;
@@ -111,4 +101,37 @@ form#new-topic-form {
     left: -80px;
 }
 
+.user-instructions {
+    padding-top: 40px;
+    padding-left: 50px;
+    float:  left;
+    position: fixed;
+    width: 200px;
+}
 
+#instruction-text {
+    font-size: 11pt;
+    color: rgba(153, 153, 153, 0.76);
+    padding-top: 15px;
+    line-height: 16pt;
+}
+
+.help-icons{
+    font-size:  1.7em;
+    color: #8e8e8e;
+    cursor: pointer;
+}
+
+#instruction-text > .icon-comment, .icon-pencil, .icon-chevron-down, .icon-chevron-up{
+    color: #8e8e8e
+}
+
+.vote-weight {
+    color: #888888;
+    font-weight: bold;
+}
+
+.weight-container {
+    color: #ababab;
+    font-weight: bold;
+}

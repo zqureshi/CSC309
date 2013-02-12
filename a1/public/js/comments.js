@@ -8,6 +8,18 @@ $(document).ready(function () {
     });
 
     /**
+     * Displays user instructions.
+     */
+    $('.help-icons').click(function() {
+        if($('#instruction-text').css("display") == 'none'){
+            $(this).html('<i class="icon-question-sign"></i><i class = "icon-chevron-up"></i>');
+        } else {
+            $(this).html('<i class="icon-question-sign"></i><i class = "icon-chevron-down"></i>');
+        }
+        $('#instruction-text').toggle();
+    })
+
+    /**
      * Hides the topic editor on click outside of the header.
      */
     $('html').click(function (e) {

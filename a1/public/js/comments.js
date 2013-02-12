@@ -13,9 +13,9 @@ $(document).ready(function () {
     $('.help-icons').click(function() {
         var instructions = $('#instruction-text');
         if(instructions.css("display") == 'none'){
-            $(this).html('<i class="icon-question-sign"></i><i class = "icon-chevron-up"></i>');
+          $('#help-chevron').attr('class', 'icon-chevron-up');
         } else {
-            $(this).html('<i class="icon-question-sign"></i><i class = "icon-chevron-down"></i>');
+          $('#help-chevron').attr('class', 'icon-chevron-down');
         }
         instructions.toggle();
     });

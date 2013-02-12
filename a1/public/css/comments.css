@@ -10,10 +10,14 @@
   margin-bottom: 20px;
 }
 
+.hidden {
+    display: none;
+}
+
 .topic-text {
     text-decoration: underline;
     margin-bottom: 0px;
-    cursor: default;
+    cursor: pointer;
 }
 
 a {

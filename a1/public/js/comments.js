@@ -48,7 +48,10 @@ $(document).ready(function () {
         posting.done(function (data) {
 
             $('#new-topic-form')[0].reset();
-            $('#topics').append(createThread(data.id, data.votes, data.voteWeight, data.text, data.link));
+            var thread = createThread(data.id, data.votes, data.voteWeight, data.text, data.link);
+            $('#topics').append(thread);
+            thread.find(".expand-collapse-button").addClass("hidden");
+            toggleCollapse(data.id);
             $('html, body').animate({
                 scrollTop:$('#thread' + String(data.id).replace(/:/g, '\\:')).offset().top
             }, 1000);
@@ -243,10 +246,11 @@ $(document).ready(function () {
             cancelBtn.click(function() {
                 hideEditors();
             });
+
+            $("#post"+topicID).find(".expand-collapse-button").removeClass("hidden");
         });
 
         if(!postID) {
-
             var collapseExpandButton = $('<a/>', {
                 'class':'expand-collapse-button'
             });
@@ -307,13 +311,14 @@ $(document).ready(function () {
 
     var toggleCollapse = function(topicID) {
         var topic = $("#thread" + topicID);
+        var replies = topic.find('[id*=":"]');
         if(topic.attr("collapsed") == "true") {
-            topic.find('[id*=":"]').show();
+            replies.show();
             topic.attr("collapsed", "false");
             $("#post" + topicID).find(".expand-collapse-button").html("<i class=\"icon-chevron-up\" style=\"margin-right:3px;\"></i>hide comments");
         }
         else {
-            topic.find('[id*=":"]').hide();
+            replies.hide();
             topic.attr("collapsed", "true");
             $("#post" + topicID).find(".expand-collapse-button").html("<i class=\"icon-chevron-down\" style=\"margin-right:3px;\"></i>show comments");
         }
@@ -352,6 +357,10 @@ $(document).ready(function () {
         populate($('#topics'), data);
         data.forEach(function(topic) {
             toggleCollapse(topic.id);
+            var thread = $("#thread" + topic.id);
+            if(thread.find('[id*=":"]').size() == 0) {
+                thread.find(".expand-collapse-button").addClass("hidden");
+            }
         })
     });
 

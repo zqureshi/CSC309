@@ -9,7 +9,57 @@ var assert = require('assert');
  *
  * @type {Array}
  */
-var topics = [];
+var topics = [
+/**
+ * {
+ *   "id": 0,
+ *   "text": "Breaking news: Jack has lost his surprise :(",
+ *   "link": "http://www.lostandfound.ca",
+ *   "voteWeight": 32,
+ *   "votes": 2,
+ *   "replies": [
+ *     {
+ *       "id": "0:0",
+ *       "text": "founddd it.",
+ *       "votes": 5,
+ *       "voteWeight": 29,
+ *       "replies": [
+ *         {
+ *           "id": "0:0:0",
+ *           "text": "Excellent hiding place .#teamWordpress",
+ *           "votes": 10,
+ *           "voteWeight": 24,
+ *           "replies": [
+ *             {
+ *               "id": "0:0:0:0",
+ *               "text": "AHEM. #teamTumblr",
+ *               "votes": 7,
+ *               "voteWeight": 14,
+ *               "replies": [
+ *                 {
+ *                   "id": "0:0:0:0:0",
+ *                   "text": "tumblrrr",
+ *                   "votes": 7,
+ *                   "voteWeight": 7,
+ *                   "replies": []
+ *                 }
+ *               ]
+ *             }
+ *           ]
+ *         }
+ *       ]
+ *     },
+ *     {
+ *       "id": "0:1",
+ *       "text": "as if there is a national lost and found site.",
+ *       "votes": 1,
+ *       "voteWeight": 1,
+ *       "replies": []
+ *     }
+ *   ]
+ * },
+ */
+];
 
 /**
  * Check if element exists and is of the required type,

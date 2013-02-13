@@ -6,6 +6,9 @@
 var request = require('request');
 apiUrl = 'http://localhost:31315';
 
+/* The counter of currently active POST requests */
+var postCounter = 0;
+
 /* Population data */
 var topics = [
     {
@@ -90,6 +93,7 @@ var topics = [
 
 /* Post a topic and all of the replies to that topic*/
 function postTopic(topic) {
+    incrementPostCounter();
     request.post(apiUrl + '/topic', function(err, res, body){
         if(err) {
             throw err;
@@ -101,11 +105,13 @@ function postTopic(topic) {
         topic.replies.forEach(function(reply) {
             postReply(reply, json.id, null);
         });
+        decrementPostCounter();
     }).form({'text': topic.text, 'link': topic.link});
 }
 
 /* Post a comment and all of the replies to that comment */
 function postReply(reply, topicID, replyID) {
+    incrementPostCounter();
     request.post(apiUrl + '/topic/' + topicID +'/reply' + (replyID ? '/' + replyID : ""), function(err, res, body){
         if(err) {
             throw err;
@@ -117,12 +123,19 @@ function postReply(reply, topicID, replyID) {
         reply.replies.forEach(function(comment) {
             postReply(comment, topicID, json.id);
         });
+        decrementPostCounter();
     }).form({'text': reply.text, 'link': reply.link});
 }
 
 /* Upvote a post */
 function upvotePost(topicID, replyID) {
-    request.post(apiUrl + '/topic/' + topicID + (replyID ? '/reply/' + replyID : "") + '/upvote', function(err, res, body){ if(err) throw err;});
+    incrementPostCounter();
+    request.post(apiUrl + '/topic/' + topicID + (replyID ? '/reply/' + replyID : "") + '/upvote', function(err, res, body){
+        if(err) {
+            throw err;
+        }
+        decrementPostCounter();
+    });
 }
 
 /* Clear Topics */
@@ -133,4 +146,17 @@ request.get(apiUrl + '/clear', function(error, response, body){
       postTopic(topic);
   })
 });
+
+/* increments the counter of currently processed POST requests */
+var incrementPostCounter = function() {
+    postCounter++;
+};
+
+/* decrements the counter of currently processed POST requests */
+var decrementPostCounter = function() {
+    postCounter--;
+    if(postCounter == 0) {
+        console.log("\n------------Finished Populating Data------------\n")
+    }
+};
 

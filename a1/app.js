@@ -110,7 +110,7 @@ function router(req, res) {
   });
 
   var candidates = routes[req.method];
-  for(var i = 0; i < candidates.length; i++) {
+  for(var i = 0; candidates && i < candidates.length; i++) {
     var match = candidates[i].regex.exec(url.parse(req.url).pathname);
 
     if (!match) continue;

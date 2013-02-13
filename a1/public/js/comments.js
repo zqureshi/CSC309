@@ -10,14 +10,8 @@ $(document).ready(function () {
     /**
      * Displays user instructions.
      */
-    $('.help-icons').click(function() {
-        var instructions = $('#instruction-text');
-        if(instructions.css("display") == 'none'){
-          $('#help-chevron').attr('class', 'icon-chevron-up');
-        } else {
-          $('#help-chevron').attr('class', 'icon-chevron-down');
-        }
-        instructions.fadeToggle('fast');
+    $('.user-instructions').click(function() {
+        $('#instruction-text').fadeToggle('fast');
     });
 
     /**

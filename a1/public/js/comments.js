@@ -61,12 +61,12 @@ $(document).ready(function () {
      * Creates a comment thread (tree) and places the post with
      * the specified id and text at the root of the thread.
      *
-     * @param id {String} the id of the thread, which also specifies the ids of parents
+     * @param {String} id the id of the thread, which also specifies the ids of parents
      *     threads, all the way to the root. Use colons to separate the parent ids. E.g. 1:1:3:2
-     * @param numVotes {Number} the number of times this comment was up-voted
-     * @param voteWeight {Number} the cumulative number of upvotes on the post and its replies
-     * @param text {String} the text inside the comment
-     * @param url {String} the url which will be displayed if the comment is a Topic
+     * @param {Number} numVotes the number of times this comment was up-voted
+     * @param {Number} voteWeight the cumulative number of upvotes on the post and its replies
+     * @param {String} text the text inside the comment
+     * @param {String} url the url which will be displayed if the comment is a Topic
      * @returns {jQuery} a div element with the class 'comment-thread' and the id 'thread' + id
      */
     var createThread = function (id, numVotes, voteWeight, text, url) {
@@ -100,11 +100,11 @@ $(document).ready(function () {
     /**
      * Creates a post with a voting area. This should be placed inside a thread.
      *
-     * @param id {String} the id of the post, which matches the thread id
-     * @param numVotes {Number} the number of times this comment was up-voted
-     * @param voteWeight {Number} the cumulative number of upvotes on the post and its replies
-     * @param text {String} the text inside the comment
-     * @param url {String} the url which will be displayed if the comment is a Topic
+     * @param {String} id the id of the post, which matches the thread id
+     * @param {Number} numVotes the number of times this comment was up-voted
+     * @param {Number} voteWeight the cumulative number of upvotes on the post and its replies
+     * @param {String} text the text inside the comment
+     * @param {String} url the url which will be displayed if the comment is a Topic
      * @returns {jQuery} a div element with the class 'post' and the id 'post' + id
      */
     var createPost = function (id, numVotes, voteWeight, text, url) {
@@ -154,8 +154,8 @@ $(document).ready(function () {
     /**
      * Creates the elements to be placed under the comment.
      *
-     * @param topicID {String} the id of the topic, under which this comment exists
-     * @param postID {String} the path from the topic to the comment (not includeing the comment), separated by colons.
+     * @param {String} topicID the id of the topic, under which this comment exists
+     * @param {String} postID the path from the topic to the comment (not includeing the comment), separated by colons.
      * @returns {jQuery} a div element with the class 'post-footer'
      */
     var createFooter = function (topicID, postID) {
@@ -260,10 +260,10 @@ $(document).ready(function () {
     /**
      * Creates the up-vote area.
      *
-     * @param topicID {String} the id of the topic, under which this comment exists
-     * @param postID {String} the path from the topic to the comment (not includeing the comment), separated by colons.
-     * @param numVotes {Number} the number of times this comment has been up-voted
-     * @param voteWeight {Number} the cumulative number of upvotes on the post and its replies
+     * @param {String} topicID the id of the topic, under which this comment exists
+     * @param {String} postID the path from the topic to the comment (not includeing the comment), separated by colons.
+     * @param {Number} numVotes the number of times this comment has been up-voted
+     * @param {Number} voteWeight the cumulative number of upvotes on the post and its replies
      * @returns {jQuery} a div element with the class 'voting-container'
      */
     var createUpvoteContainer = function (topicID, postID, numVotes, voteWeight) {
@@ -303,6 +303,11 @@ $(document).ready(function () {
         return upvoteContainer.append(upvoteButton, voteWeightDisplay, voteCount);
     };
 
+    /**
+     * Toggles the collapse state of replies to the topic with id topicID
+     *
+     * @param {String} topicID the id of a topic
+     */
     var toggleCollapse = function(topicID) {
         var topic = $("#thread" + topicID);
         var replies = topic.find('[id*=":"]');
@@ -321,7 +326,7 @@ $(document).ready(function () {
     /**
      * Sorts the posts and their comments by the total number of votes in the thread.
      *
-     * @param posts {Array} an array of posts
+     * @param {Array} posts an array of posts
      */
     var sortPosts = function (posts) {
         posts.sort(function (a, b) {

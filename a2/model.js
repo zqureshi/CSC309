@@ -15,106 +15,80 @@
     );
 */
 
+var sqlite3 = require('sqlite3').verbose()    /*https://github.com/developmentseed/node-sqlite3/wiki/API*/
+    , fs = require('fs')
+    , squel = require ("squel");
 
-var sqlite = require('./node_modules/node-sqlite/sqlite.js') /* http://github.grumdrig.com/node-sqlite/
- , squel = require ("squel")
-    , db = './a2.db';
-
-/**
- * Validate domain name.
- * @param blog (string)
- */
-function validateDomain(blog){
-    var RegExp = /^([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,6}$/;
-
-    if(!RegExp.test(blog) || blog.length > 63){
-        throw 'Invalid Blog name'
+var db = new sqlite3.Database('a2db.sqlite3', function(err){
+    if (err){
+        throw 'error creating db'
     }
-};
+    createTables();
+});
 
-/** Verifies that the blog is being tracked.
- *
- * @param blog (string)
- */
-function isFollowed(blog){
-    var q = alert(
-        squel.select()
-            .from("blogs")
-            .where("blog = '" + blog + "'")
-    );
 
-    db.query(q, function(r){
-        if (r.rows.length == 0){
-            throw 'Blog not followed'
+function createTables(){
+
+    db.run("CREATE TABLE IF NOT EXISTS blogs (blog VARCHAR(63) PRIMARY KEY)", function(err){
+        if(err){
+            throw 'error making table blogs'
         }
-    })
-
+        //TODO create posts table
+    });
 }
 
-/** Adds a blog to be tracked to the database.
+/** Returns true if the blog is already being tracked by the db, false otherwise.
  *
- * @param {request} req  the blog to be tracked
- * @param {result} res
+ * @param blog
  */
-exports.follow = function(req, res){
+exports.isFollowed = function(blog){
 
-    var blog = req.params.blog;
-    try {
-        validateDomain(blog);
-        var q = alert(
-                squel.insert()
-                    .into("blog")
-                    .set("blog",blog)
-        );  /* INSERT INTO blogs (blog) VALUES({blog})*/
+    var q = squel.select()
+            .from("blogs")
+            .where("blog = '" + blog + "'").toString();
 
-        db.query(q, function(r){
-            if(r.rowsAffected != 1){
-                throw " Insertion Error"
-            };
-        });
-        res.json({success:true});
-    } catch (e){
-        res.json(400, {error:e});
-    }
-
+    var row = db.get(q, function(err, row){
+        if (err){
+            throw 'look up error'
+        }
+        return row;
+    });
+   return row != undefined;
 }
-/** Returns the most recent posts, sorted by date created, regardless of popularity.
- * Allows optional parameters limit and blog. Defaults to all blogs and a limit
- * of 20 if none other provided.
+
+/** Adds a blog to be tracked to the database. Assumes blog is a valid domain and
+ * not yet in the database. Returns true if successful, else throws an error.
+ *
+ * @param  blog
+ */
+exports.follow = function(blog){
+
+    var q = squel.insert()
+               .into("blogs")
+               .set("blog",blog).toString();
+               /* INSERT INTO blogs (blog) VALUES({blog})*/
+
+    db.run(q, function(err){
+           if(err){
+              throw " Insertion Error"
+           };
+        });
+        return true;
+}
+
+
+/** Returns the {limit} most recent posts liked by {blog}, sorted by
+ * date created regardless of popularity. Assumes {blog} is a tracked blog.
  *
  * @param {int} limit
  * @param {string) blog
  */
 exports.recent = function (limit, blog){
-    //TODO move validation to controller, change function return type
-    //TODO introduce new error message for the case where the blog exists in db already
-    //TODO  require parameters. Let controller handle default values
+    //TODO complete
 
-    var blog;
-    var limit = req.param.limit ? req.params.limit : 20;
+   var q = squel.select().from("posts").toString();
 
-    try {
-        if (req.params.blog){
-            blog = req.params.blog;
-            validateDomain(blog);
-            isFollowed(blog);
-        } else{
-            blog = "*";
-        }
-        var q = alert(
-                squel.select()
 
-        );
-
-        db.query(q, function(r){
-            if(r.rowsAffected != 1){
-                throw " Insertion Error"
-            }
-        });
-        res.json({success:true});
-    } catch (e){
-        res.json(400, {error:e});
-    }
 }
 
 /**

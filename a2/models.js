@@ -30,7 +30,7 @@ function Models() {
    * Define models for sequelize
    */
   this.Blog = sequelize.define('Blog', {
-    blog: { type: Sequelize.STRING, primaryKey: true }
+    name: { type: Sequelize.STRING, primaryKey: true }
   });
 
   /**
@@ -49,15 +49,15 @@ function Models() {
  *
  * @param blogName
  */
-Models.prototype.addBlog = function(blogName) {
+exports.addBlog = function(blogName) {
   return this.Blog.create({
-    blog: blogName
+    name: blogName
   });
 }
 
 /**
  * List all blogs.
  */
-Models.prototype.getBlogs = function() {
+exports.getBlogs = function() {
   return this.Blog.all();
 }

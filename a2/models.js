@@ -37,10 +37,11 @@ function Models() {
     id: { type: Sequelize.INTEGER, primaryKey: true },
     likedBy: { type: Sequelize.STRING },
     url: { type: Sequelize.STRING },
-    datePosted: { type: Sequelize.DATE },
-    content: {type: Sequelize.STRING},
-    type: {type: Sequelize.STRING },// ('text'|'image')
-    count: {type: Sequelize.INTEGER},
+    date: { type: Sequelize.DATE }, //date posted, not current date
+    text: {type: Sequelize.STRING},
+    image: {type: Sequelize.STRING},
+    type: {type: Sequelize.STRING },
+    note_count: {type: Sequelize.INTEGER},
     increment: {type: Sequelize.INTEGER},
     // { [ { "timestamp": <time-tracked>, "sequence": <int>,
     // "increment": <int>, "count": <int>}, {...}, ...]}
@@ -77,6 +78,7 @@ exports.getBlogs = function() {
   return this.Blog.all();
 }
 
+
 /**
  * Returns trending posts in the specified order
  *
@@ -91,4 +93,17 @@ exports.getTrends = function(blog, order, limit){
     };
   blog && (query['where'] = ['likedBy = ?', blog]);
   return this.Posts.findAll(query);
-};
+}
+
+/**
+ *
+ * @param blogName
+ * @returns {*}
+ */
+exports.isFollowed = function(blogName){
+    var followed
+    this.Blog.find({where: {name: blogName} }).success(function(blogName){
+    followed = blogName;
+    })
+return followed =! undefined;
+}

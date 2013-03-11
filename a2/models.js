@@ -30,7 +30,7 @@ function Models() {
    * Define models for sequelize
    */
   this.Blog = sequelize.define('Blog', {
-    name: { type: Sequelize.STRING, primaryKey: true }
+    blogName: { type: Sequelize.STRING, primaryKey: true }
   });
 
   this.Posts = sequelize.define('Posts', {
@@ -66,7 +66,7 @@ function Models() {
  */
 exports.addBlog = function(blogName) {
   return this.Blog.create({
-    name: blogName
+    blogName: blogName
   });
 }
 

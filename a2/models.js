@@ -84,7 +84,7 @@ exports.getBlogs = function() {
  * @param {String} order 
  * @param {Number} limit
  */
-Models.prototype.getTrends = function(blog, order, limit){
+exports.getTrends = function(blog, order, limit){
   var query = {
       order: ['? DESC', (order == "Trending") ? 'count' : 'datePosted']}),
       limit: limit

@@ -6,7 +6,8 @@
 var express = require('express')
   , http = require('http')
   , path = require('path')
-  , controller = require('./controller');
+  , controller = require('./controller')
+  , Tracker = require('./tracker');
 
 var app = express();
 
@@ -27,6 +28,9 @@ app.configure('development', function(){
 app.post('/blog', controller.follow);
 app.get('/blog/:baseHostname/trends', controller.getTrends);
 app.get('/blogs/trends', controller.getTrends);
+
+/* Start tracker and update every 3600 seconds + initial update */
+var tracker = new Tracker(3600, true);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

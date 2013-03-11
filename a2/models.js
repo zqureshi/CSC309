@@ -61,3 +61,7 @@ exports.addBlog = function(blogName) {
 exports.getBlogs = function() {
   return this.Blog.all();
 }
+
+Models.prototype.getTrends = function(blog, order, limit){
+    //TODO: implement me.
+}

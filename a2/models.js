@@ -116,13 +116,41 @@ exports.trackPost = function(blogName, fetchedPost) {
         tracking: '[]'
       });
 
-      if(post.type == 'photo') {
-        var photo = fetchedPost.photos[0];
-        post.text = scrapeText(photo.caption);
-        post.image = photo.original_size.url;
-      } else if(post.type == 'text') {
-        post.text = fetchedPost.title ? scrapeText(fetchedPost.title) + '\n' : '';
-        post.text += scrapeText(fetchedPost.body);
+      switch(post.type) {
+        case 'text':
+        case 'chat':
+          post.text = fetchedPost.title ? scrapeText(fetchedPost.title) + '\n' : '';
+          post.text += scrapeText(fetchedPost.body);
+          break;
+
+        case 'photo':
+          var photo = fetchedPost.photos[0];
+          post.text = scrapeText(fetchedPost.caption || photo.caption);
+          post.image = photo.original_size.url;
+          break;
+
+        case 'quote':
+          post.text = scrapeText(fetchedPost.text);
+          break;
+
+        case 'link':
+          post.text = fetchedPost.title ? scrapeText(fetchedPost.title) + '\n' : '';
+          post.text += scrapeText(fetchedPost.description);
+          break;
+
+        case 'audio':
+          post.text = scrapeText(fetchedPost.caption);
+          post.image = fetchedPost.album_art;
+          break;
+
+        case 'video':
+          post.text = scrapeText(fetchedPost.caption);
+          break;
+
+        case 'answer':
+          post.text = scrapeText(fetchedPost.question) + '\n';
+          post.text += scrapeText(fetchedPost.answer);
+          break;
       }
     }
 

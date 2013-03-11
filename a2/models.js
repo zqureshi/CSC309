@@ -84,7 +84,11 @@ exports.getBlogs = function() {
 }
 
 function scrapeText(html) {
-  return cheerio.load(html).root().text();
+  if(html) {
+    return cheerio.load(html).root().text();
+  } else {
+    return '';
+  }
 }
 
 /**

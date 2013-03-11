@@ -90,5 +90,5 @@ exports.getTrends = function(blog, order, limit){
       limit: limit
     };
   blog && query.['where'] = ['likedBy = ?', blog];
-  this.Posts.findAll(query);
+  return this.Posts.findAll(query);
 }

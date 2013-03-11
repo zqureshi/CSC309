@@ -33,6 +33,21 @@ function Models() {
     name: { type: Sequelize.STRING, primaryKey: true }
   });
 
+  this.Posts = sequelize.define('Posts', {
+    id: { type: Sequelize.INTEGER, primaryKey: true },
+    likedBy: { type: Sequelize.STRING },
+    url: { type: Sequelize.STRING },
+    datePosted: { type: Sequelize.STRING },
+    content: {type: Sequelize.STRING},
+    type: {type: Sequelize.STRING },// ('text'|'image')
+    count: {type: Sequelize.INTEGER},
+    increment: {type: Sequelize.INTEGER},
+    // { [ { "timestamp": <time-tracked>, "sequence": <int>,
+    // "increment": <int>, "count": <int>}, {...}, ...]}
+    tracking: { type: Sequelize.TEXT }
+  });
+
+
   /**
    * Sync Database
    */

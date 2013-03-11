@@ -95,15 +95,13 @@ exports.getTrends = function(blog, order, limit){
   return this.Posts.findAll(query);
 }
 
-/**
+
+/**Checks for the blog blogName in the db
  *
- * @param blogName
+ * @param {String} blogName
  * @returns {*}
  */
-exports.isFollowed = function(blogName){
-    var followed
-    this.Blog.find({where: {name: blogName} }).success(function(blogName){
-    followed = blogName;
-    })
-return followed =! undefined;
+exports.getBlog = function(blogName){
+    return this.Blog.find({where: {name: blogName} })
+
 }

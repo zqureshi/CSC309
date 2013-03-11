@@ -13,6 +13,13 @@ function validateDomain(blogName){
     }
 };
 
+function isFollowed(blogName){
+    var row = model.getBlog(blogName).success(function(row){
+        return row;
+    });
+    return (row != undefined);
+}
+
 
 /** Add a blog to the db to be tracked.
  *
@@ -23,10 +30,11 @@ exports.follow = function(req, res) {
     var blog = req.params.blogName
     try {
         validateDomain(blog);
-        if (model.isFollowed(blogName)){
+        if(isFollowed(blogName)){
             throw 'Blog already tracked'
         }
-        res.json({success: model.follow(blogName) });
+        model.follow(blogName)
+        res.json({success:true});
     } catch (e){
         res.json(400, {error:e});
     }
@@ -51,13 +59,14 @@ exports.getTrends = function(req, res) {
             };
     }
 
-
     if(req.query.order == "Trending" || req.query.order == "Recent") {
-        var rows = model.getTrends(blogName, req.query.order, limit);
-        //TODO parse rows, build json response object
+        model.getTrends(blogName, req.query.order, limit).success(function(rows){
+//TODO parse rows, build json response object
+        });
+
         res.json({success:true});
     } else {
-        throw 'Order not specified';
+        throw 'Order not specified: pick Trending or Recent';
     }
   } catch(e) {
     res.json(400, {error:e});

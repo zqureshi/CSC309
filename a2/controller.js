@@ -48,9 +48,7 @@ exports.getTrends = function(req, res) {
             if(!isFollowed(blog)){
                 throw 'Blog not tracked'
             };
-    } else {
-        blog = "*";  //defaults to all
-    }
+    } 
 
     if(req.query.order == "Trending" || req.query.order == "Recent") {
         var rows = model.getTrends(blog, req.query.order, limit);

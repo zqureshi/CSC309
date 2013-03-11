@@ -62,7 +62,7 @@ function Models() {
 /**
  * Add a new blog to database.
  *
- * @param blogName
+ * @param {String} blogName 
  */
 exports.addBlog = function(blogName) {
   return this.Blog.create({
@@ -77,6 +77,18 @@ exports.getBlogs = function() {
   return this.Blog.all();
 }
 
+/**
+ * Returns trending posts in the specified order
+ *
+ * @param {String} blog the blog hostname 
+ * @param {String} order 
+ * @param {Number} limit
+ */
 Models.prototype.getTrends = function(blog, order, limit){
-    //TODO: implement me.
+  var query = {
+      order: ['? DESC', (order == "Trending") ? 'count' : 'datePosted']}),
+      limit: limit
+    };
+  blog && query.['where'] = ['likedBy = ?', blog];
+  this.Posts.findAll(query);
 }

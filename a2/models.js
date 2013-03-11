@@ -37,7 +37,7 @@ function Models() {
     id: { type: Sequelize.INTEGER, primaryKey: true },
     likedBy: { type: Sequelize.STRING },
     url: { type: Sequelize.STRING },
-    datePosted: { type: Sequelize.STRING },
+    datePosted: { type: Sequelize.DATE },
     content: {type: Sequelize.STRING},
     type: {type: Sequelize.STRING },// ('text'|'image')
     count: {type: Sequelize.INTEGER},

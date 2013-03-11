@@ -86,9 +86,9 @@ exports.getBlogs = function() {
  */
 exports.getTrends = function(blog, order, limit){
   var query = {
-      order: ['? DESC', (order == "Trending") ? 'count' : 'datePosted']}),
+      order: ['? DESC', (order == "Trending") ? 'count' : 'datePosted'],
       limit: limit
     };
   blog && query.['where'] = ['likedBy = ?', blog];
   return this.Posts.findAll(query);
-}
+};

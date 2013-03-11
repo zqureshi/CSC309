@@ -3,7 +3,8 @@
  */
 
 var path = require('path')
-  , Sequelize = require('sequelize');
+  , Sequelize = require('sequelize')
+  , cheerio = require('cheerio');
 
 /**
  * Expose Models
@@ -23,7 +24,8 @@ function Models() {
    */
   var sequelize = new Sequelize(null, null, null, {
     dialect: 'sqlite',
-    storage: path.join(__dirname, 'db.sqlite')
+    storage: path.join(__dirname, 'db.sqlite'),
+    logging: false
   });
 
   /**
@@ -38,7 +40,7 @@ function Models() {
     likedBy: Sequelize.STRING,
     url: Sequelize.STRING,
     date: Sequelize.DATE, // date posted, not current date
-    text: Sequelize.STRING,
+    text: Sequelize.TEXT,
     image: Sequelize.STRING,
     type: Sequelize.STRING,
     last_track: Sequelize.DATE,
@@ -81,6 +83,10 @@ exports.getBlogs = function() {
   return this.Blog.all();
 }
 
+function scrapeText(html) {
+  return cheerio.load(html).root().text();
+}
+
 /**
  * Update tracking info for each fetched post.
  *
@@ -108,11 +114,11 @@ exports.trackPost = function(blogName, fetchedPost) {
 
       if(post.type == 'photo') {
         var photo = fetchedPost.photos[0];
-        post.text = photo.caption;
+        post.text = scrapeText(photo.caption);
         post.image = photo.original_size.url;
       } else if(post.type == 'text') {
-        post.text = fetchedPost.title ? fetchedPost.title + '\n' : '';
-        post.text += fetchedPost.body;
+        post.text = fetchedPost.title ? scrapeText(fetchedPost.title) + '\n' : '';
+        post.text += scrapeText(fetchedPost.body);
       }
     }
 
@@ -122,11 +128,7 @@ exports.trackPost = function(blogName, fetchedPost) {
     post.increment = post.last_count - fetchedPost.note_count;
     post.last_count = fetchedPost.note_count;
 
-    /**
-     * TODO: Currently working around sqlite quoting bug in sequelize by replacing.
-     * Submit a pull request with the fix later on and remove replace statement.
-     */
-    var tracking = JSON.parse(post.tracking.replace(/\\\"/g, '"'));
+    var tracking = JSON.parse(scrapeText(post.tracking));
     tracking.unshift({
       timestamp: post.last_track,
       sequence: post.sequence,

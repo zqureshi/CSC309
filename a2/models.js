@@ -129,7 +129,7 @@ exports.trackPost = function(blogName, fetchedPost) {
     /* Update tracking */
     post.sequence += 1;
     post.last_track = new Date();
-    post.increment = post.last_count - fetchedPost.note_count;
+    post.increment = fetchedPost.note_count - post.last_count;
     post.last_count = fetchedPost.note_count;
 
     var tracking = JSON.parse(scrapeText(post.tracking));

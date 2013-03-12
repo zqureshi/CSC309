@@ -33,7 +33,7 @@ function init() {
   });
 
   app.post('/blog', controller.follow);
-  app.get('/blog/:baseHostname/trends', controller.getTrends);
+  app.get('/blog/:blogName/trends', controller.getTrends);
   app.get('/blogs/trends', controller.getTrends);
 
   /* Inject models */

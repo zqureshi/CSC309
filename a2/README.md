@@ -22,23 +22,24 @@ Start Server:
 
     $ node app
 
-\pagebreak
-
 RESTful API
 ===========
 
 `POST /blog`
- :    Add blog to the list of tracked blogs. \
-      *@param* `blog` A string indicating a new blog to track by its {base-hostname} \
+ :    Add blog to the list of tracked blogs.
+ 
+      *@param* `blog` A string indicating a new blog to track by its {base-hostname}
 
 `GET /blog/{base-hostname}/trends`
- :    Get a listing of posts liked by a given blog \
-       *@param* `limit` maximum number of posts to display \
-       *@param* `order` {"Trending" / "Recent"} sorting order in which the posts will be displayed \
+ :    Get a listing of posts liked by a given blog
+ 
+       *@param* `limit` maximum number of posts to display
+       *@param* `order` {"Trending" / "Recent"} sorting order in which the posts will be displayed
 
 `GET /blogs/trends`
- :    Get a listing of posts liked by all tracked blogs \
-       *@param* `limit` maximum number of posts to display \
+ :    Get a listing of posts liked by all tracked blogs
+ 
+       *@param* `limit` maximum number of posts to display
        *@param* `order` {"Trending" / "Recent"} sorting order in which the posts will be displayed\
 
 

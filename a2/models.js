@@ -205,5 +205,5 @@ Models.prototype.getTrends = function(blog, order, limit){
  * @returns {*}
  */
 Models.prototype.getBlog = function(blogName){
-    return this.Blog.find({where: {name: blogName} })
+    return this.Blog.find({where: {blogName: blogName} })
 };

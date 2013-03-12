@@ -186,11 +186,11 @@ Models.prototype.trackPost = function(blogName, fetchedPost) {
  * @param {Number} limit
  */
 Models.prototype.getTrends = function(blog, order, limit){
-  var trending = order == "Trending";
   var condition = (trending ? "" : "last_track >= now");
   condition += (!trending && blog ? " AND " : "");
   condition += (blog ? "likedBy = " + blog : "");
 
+  var trending = (order == "trending");
   var query = {
       order: ['? DESC', trending ? 'count' : 'datePosted'],
       where: [condition],

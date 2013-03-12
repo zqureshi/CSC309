@@ -69,9 +69,8 @@ exports.getTrends = function(req, res) {
                 throw 'Blog not tracked'
             };
     }
-
-    if(req.query.order.toLowerCase() == "trending" || req.query.order.toLowerCase() == "recent") {
-        model.getTrends(blogName, req.query.order, limit).success(function(rows){
+    var order = req.query.order.toLowerCase();
+    if(order == "trending" || order == "recent") {
         model.getTrends(blogName, order, limit).success(function(rows){
             var trending = [];
             var post;

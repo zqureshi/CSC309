@@ -41,10 +41,10 @@ exports.follow = function(req, res) {
     var blog = req.params.blogName
     try {
         validateDomain(blog);
-        if(isFollowed(blogName)){
+        if(isFollowed(blog)){
             throw 'Blog already tracked'
         }
-        model.follow(blogName)
+        model.addBlog(blog)
         res.json({success:true});
     } catch (e){
         res.json(400, {error:e});

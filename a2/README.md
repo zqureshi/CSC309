@@ -24,6 +24,10 @@ Start Server:
 
     $ ./node_modules/.bin/forever app.js
 
+Server for Marking:
+
+<http://greywolf.cdf.toronto.edu:31315>
+
 RESTful API
 ===========
 

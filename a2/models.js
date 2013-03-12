@@ -59,7 +59,8 @@ function Models(init) {
    */
   sequelize.sync().success(function() {
     console.log('DB Sync Complete.');
-    init();
+    /* If callback provided then call it */
+    if(init) init();
   }).error(function() {
     console.log('Error in DB Sync!!');
     process.exit(1);

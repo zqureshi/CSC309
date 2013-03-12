@@ -70,7 +70,7 @@ function Models(init) {
 /**
  * Add a new blog to database.
  *
- * @param {String} blogName 
+ * @param {String} blogName
  */
 Models.prototype.addBlog = function(blogName) {
   return this.Blog.create({
@@ -83,7 +83,7 @@ Models.prototype.addBlog = function(blogName) {
  */
 Models.prototype.getBlogs = function() {
   return this.Blog.all();
-}
+};
 
 function scrapeText(html) {
   if(html) {
@@ -176,13 +176,13 @@ Models.prototype.trackPost = function(blogName, fetchedPost) {
       console.log(error);
     })
   });
-}
+};
 
 /**
  * Returns trending posts in the specified order
  *
- * @param {String} blog the blog hostname 
- * @param {String} order 
+ * @param {String} blog the blog hostname
+ * @param {String} order
  * @param {Number} limit
  */
 Models.prototype.getTrends = function(blog, order, limit){

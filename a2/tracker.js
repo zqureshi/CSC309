@@ -29,7 +29,6 @@ exports = module.exports = Tracker;
 /**
  * Schedule an update of tumblr blogs every 'interval' seconds.
  *
- * @param dbModels
  * @param interval
  * @param initialUpdate
  * @constructor
@@ -47,7 +46,7 @@ function Tracker(interval, initialUpdate) {
  */
 Tracker.setModels = function(dbModels) {
   models = dbModels;
-}
+};
 
 /**
  * Fetch all followed blogs from db and update each one.
@@ -56,7 +55,7 @@ function trackBlogs() {
   models.getBlogs().success(function(blogs) {
     for(var i = 0; i < blogs.length; i++) {
       updateBlog(blogs[i].blogName);
-    };
+    }
   });
 }
 
@@ -72,7 +71,7 @@ function updateBlog(blogName) {
       var likedPosts = JSON.parse(body).response.liked_posts;
       for(var i = 0; i < likedPosts.length; i++) {
         models.trackPost(blogName, likedPosts[i]);
-      };
+      }
     } else {
       console.log(format('Error %s while fetching %s!', res.statusCode, blogName));
     }

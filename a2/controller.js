@@ -9,12 +9,13 @@ var model;
  * @param dbModels
  */
 exports.setModels = function(dbModels) {
-  model = dbModels;
-}
+    model = dbModels;
+};
 
 /**
- * Validate domain name.
- * @param blog (string)
+ * Check whether blogName is a valid domain name
+ *
+ * @param {String} blogName the name of the blog to be validated.
  */
 function validateDomain(blogName){
     var RegExp = /^([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,6}$/;
@@ -22,74 +23,108 @@ function validateDomain(blogName){
     if(!RegExp.test(blogName) || blogName.length > 63){
         throw 'Invalid Blog name'
     }
-};
-
-function isFollowed(blogName){
-    var row = model.getBlog(blogName).success(function(row){
-        return row;
-    });
-    return (row != undefined);
 }
 
+/**
+ * Looks for blog in the database and calls callback(req, res, row)
+ *
+ * @param {request} req
+ * @param {response} res
+ * @param {String} blog
+ * @param {function} callback
+ */
+function findBlog(req, res, blog, callback) {
+    model.getBlog(blog)
+        .success(function(row){
+            callback(req, res, row);
+        })
+        .fail(function(err) {
+            res.json(400, {error:err});
+        });
+}
 
-/** Add a blog to the db to be tracked.
+/**
+ * Add a blog to the db to be tracked.
+ * Throw exception if blog is already tracked.
  *
  * @param {request} req
  * @param {response} res
  */
 exports.follow = function(req, res) {
-    var blog = req.params.blogName
+    var blog = req.body.blog;
     try {
         validateDomain(blog);
-        if(isFollowed(blog)){
-            throw 'Blog already tracked'
-        }
-        model.addBlog(blog)
-        res.json({success:true});
-    } catch (e){
-        res.json(400, {error:e});
+        var onSuccess = function(request, response, row) {
+            if(row) {
+                response.json(400, {error:'Blog already tracked'});
+            } else {
+                model.addBlog(blog).success(function() {
+                    response.json({success:true});
+                }).fail(function(err) {response.json(400, {error:err})});
+            }
+        };
+        findBlog(req, res, blog, onSuccess);
+    }
+    catch(e) {
+        res.json(400, {error: e});
     }
 };
 
-/** Get a list of trending or recent posts.
+/**
+ * Get a list of trending or recent posts.
+ * Throw exception if untracked blog is specified.
  *
  * @param {request} req
  * @param {response} res
  */
 exports.getTrends = function(req, res) {
+    try {
+        var blogName;
+        var limit = req.body.limit || 20;   //defaults to 20 posts
 
-  try {
-    var blogName;
-    var limit = req.param.limit || 20;   //defaults to 20 posts
+        var proceed = function(request, response, blog, lim) {
+            var order = request.body.order && request.body.order.toLowerCase();
+            if(order == "trending" || order == "recent") {
+                model.getTrends(blog, order, lim)
+                    .success(function(rows){
+                        var trending = [];
+                        var post;
+                        var fields = ["url", "text", "image", "date", "last_track", "last_count"];
+                        rows.forEach(function(row) {
+                            post = {};
+                            fields.forEach(function(field) {
+                                post[field] = row[field];
+                            });
+                            post["tracking"] = JSON.parse(row["tracking"]);
+                            trending.push(post);
+                        });
+                        response.json({"trending": trending, "order": order, "limit": lim});
+                    })
+                    .fail(function(err) {
+                        response.json(400, {error: err});
+                    });
+            } else {
+                response.json(400, {error: 'Order not specified: pick Trending or Recent'});
+            }
+        };
 
-    if (req.params.blogName){
-            blogName = req.params.blogName;
+        if (blogName = req.params.blogName){
             validateDomain(blogName);
-            if(!isFollowed(blogName)){
-                throw 'Blog not tracked'
+            var onSuccess = function(request, response, row) {
+                if(row) {
+                    proceed(request, response, blogName, limit)
+                }
+                else {
+                    response.json(400, {error: 'Blog not tracked'});
+                }
             };
+            findBlog(req, res, blogName, onSuccess);
+        }
+        else {
+            proceed(req, res, blogName, limit);
+        }
+    } catch(e) {
+        res.json(400, {error: e});
     }
-    var order = req.query.order && req.query.order.toLowerCase();
-    if(order == "trending" || order == "recent") {
-        model.getTrends(blogName, order, limit).success(function(rows){
-            var trending = [];
-            var post;
-            var fields = ["url", "text", "image", "date", "last_track", "last_count"];
-            rows.forEach(function(row) {
-                post = {};
-                fields.forEach(function(field) {
-                    post[field] = row[field];
-                });
-                post.tracking = JSON.parse(row.tracking);
-                trending.push(post);
-            });
-            res.json({"trending": trending, "order": req.query.order, "limit": limit});
-        });
-    } else {
-        throw 'Order not specified: pick Trending or Recent';
-    }
-  } catch(e) {
-    res.json(400, {error:e});
-  }
 };
 

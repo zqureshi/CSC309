@@ -22,7 +22,7 @@ Install Dependencies :
 
 Start Server:
 
-    $ node app
+    $ ./node_modules/.bin/forever app.js
 
 RESTful API
 ===========

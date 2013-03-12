@@ -7,9 +7,11 @@ Requirements
 
   + Node.js
   + SQLite3
-  + Sequelize - (Used by models.js to communicate with the database)
+  + Sequelize - (Object Relational Map used my models.js)
   + Express - (for routing API requests)
-  + Cheerio
+  + Cheerio - (For scraping text from HTML)
+  + Request - (Module for nicer HTTP requests)
+  + Forever - (Monitor server and restart on crash)
 
 Usage
 =====

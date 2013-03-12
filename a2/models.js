@@ -186,14 +186,14 @@ Models.prototype.trackPost = function(blogName, fetchedPost) {
  * @param {Number} limit
  */
 Models.prototype.getTrends = function(blog, order, limit){
-  var condition = (trending ? "" : "last_track >= now");
-  condition += (!trending && blog ? " AND " : "");
-  condition += (blog ? "likedBy = " + blog : "");
-
   var trending = (order == "trending");
   var query = {
-      order: ['? DESC', trending ? 'count' : 'datePosted'],
-      where: [condition],
+      order: ['? DESC', trending ? 'last_count' : 'date'],
+      where: ["? ? ?",
+                    (trending ? "" : "last_track >= date('now','-1 hour'"),
+                    (!trending && blog ? "AND" : ""),
+                    (blog ? "likedBy = " + blog : "")
+             ],
       limit: limit
     };
   return this.Posts.findAll(query);
@@ -206,5 +206,4 @@ Models.prototype.getTrends = function(blog, order, limit){
  */
 Models.prototype.getBlog = function(blogName){
     return this.Blog.find({where: {name: blogName} })
-
-}
+};

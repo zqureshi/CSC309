@@ -69,17 +69,18 @@ exports.getTrends = function(req, res) {
                 throw 'Blog not tracked'
             };
     }
-    var order = oreq.query.order && req.query.order.toLowerCase();
+    var order = req.query.order && req.query.order.toLowerCase();
     if(order == "trending" || order == "recent") {
         model.getTrends(blogName, order, limit).success(function(rows){
             var trending = [];
             var post;
-            var fields = ["url", "text", "image", "date", "last_track", "last_count", "tracking"];
+            var fields = ["url", "text", "image", "date", "last_track", "last_count"];
             rows.forEach(function(row) {
                 post = {};
                 fields.forEach(function(field) {
                     post[field] = row[field];
                 });
+                post.tracking = JSON.parse(row.tracking);
                 trending.push(post);
             });
             res.json({"trending": trending, "order": req.query.order, "limit": limit});

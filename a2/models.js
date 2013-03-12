@@ -190,7 +190,7 @@ Models.prototype.getTrends = function(blog, order, limit){
   var query = {
       order: ['? DESC', trending ? 'last_count' : 'date'],
       where: ["? ? ?",
-                    (trending ? "" : "last_track >= date('now','-1 hour'"),
+                    (trending ? "" : "last_track >= date('now','-1 hour')"),
                     (!trending && blog ? "AND" : ""),
                     (blog ? "likedBy = " + blog : "")
              ],

@@ -63,7 +63,6 @@ updated information for the tracked blogs. The information is passed
 to the database throught the functions in models.js.
 
 
-
 `app.js`
 
  :    The bare node.js server that listens to HTTP requests and routes to
@@ -80,6 +79,13 @@ to the database throught the functions in models.js.
 `model.js`
 
  :    Initializes the database (if it doesn't exist), and contains functions that query the database.
+
+Sequence Diagrams
+=================
+
+![Alt text](./Tumblr Sequence Diagram.png)  
+    
+![Alt text](./User-Server Sequence Diagram.png)
 
 
 Database Structure

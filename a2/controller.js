@@ -1,5 +1,16 @@
+/**
+ * Model will be set by setModels method.
+ */
+var model;
 
-var model = require('./models');
+/**
+ * Set database models.
+ *
+ * @param dbModels
+ */
+exports.setModels = function(dbModels) {
+  model = dbModels;
+}
 
 /**
  * Validate domain name.

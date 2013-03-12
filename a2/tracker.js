@@ -2,9 +2,13 @@
  * Module dependencies
  */
 
-var models = require('./models')
-  , request = require('request')
+var request = require('request')
   , format = require('util').format;
+
+/**
+ * Models will be set by setModels method.
+ */
+var models;
 
 /**
  * Tumblr configuration
@@ -25,6 +29,7 @@ exports = module.exports = Tracker;
 /**
  * Schedule an update of tumblr blogs every 'interval' seconds.
  *
+ * @param dbModels
  * @param interval
  * @param initialUpdate
  * @constructor
@@ -33,6 +38,15 @@ function Tracker(interval, initialUpdate) {
   /* Track once at startup and then at every interval */
   initialUpdate && trackBlogs();
   setInterval(trackBlogs, interval * 1000);
+}
+
+/**
+ * Set database models.
+ *
+ * @param dbModels
+ */
+Tracker.setModels = function(dbModels) {
+  models = dbModels;
 }
 
 /**

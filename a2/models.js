@@ -10,7 +10,7 @@ var path = require('path')
  * Expose Models
  */
 
-exports = module.exports = new Models();
+exports = module.exports = Models;
 
 /**
  * Constructor for our models that sets up db connection and syncs tables.
@@ -18,7 +18,7 @@ exports = module.exports = new Models();
  * @constructor
  */
 
-function Models() {
+function Models(init) {
   /**
    * Set up database connection
    */
@@ -59,6 +59,7 @@ function Models() {
    */
   sequelize.sync().success(function() {
     console.log('DB Sync Complete.');
+    init();
   }).error(function() {
     console.log('Error in DB Sync!!');
     process.exit(1);
@@ -70,7 +71,7 @@ function Models() {
  *
  * @param {String} blogName 
  */
-exports.addBlog = function(blogName) {
+Models.prototype.addBlog = function(blogName) {
   return this.Blog.create({
     blogName: blogName
   });
@@ -79,7 +80,7 @@ exports.addBlog = function(blogName) {
 /**
  * List all blogs.
  */
-exports.getBlogs = function() {
+Models.prototype.getBlogs = function() {
   return this.Blog.all();
 }
 
@@ -97,7 +98,7 @@ function scrapeText(html) {
  * @param blogName
  * @param fetchedPost
  */
-exports.trackPost = function(blogName, fetchedPost) {
+Models.prototype.trackPost = function(blogName, fetchedPost) {
   var self = this;
 
   this.Posts.find(fetchedPost.id).success(function(post) {
@@ -183,7 +184,7 @@ exports.trackPost = function(blogName, fetchedPost) {
  * @param {String} order 
  * @param {Number} limit
  */
-exports.getTrends = function(blog, order, limit){
+Models.prototype.getTrends = function(blog, order, limit){
   var query = {
       order: ['? DESC', (order == "Trending") ? 'count' : 'datePosted'],
       limit: limit
@@ -198,7 +199,7 @@ exports.getTrends = function(blog, order, limit){
  * @param {String} blogName
  * @returns {*}
  */
-exports.getBlog = function(blogName){
+Models.prototype.getBlog = function(blogName){
     return this.Blog.find({where: {name: blogName} })
 
 }

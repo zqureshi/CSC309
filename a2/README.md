@@ -87,12 +87,13 @@ Database Structure
 
 `dq.sqlite`
 
-:   Blogs(blogName)
-:   Posts(id, likedBy, url, date, text, image, type, last_track, last_count, increment, sequence, tracking)
+Blogs(blogName)
+
+Posts(id, likedBy, url, date, text, image, type, last_track, last_count, increment, sequence, tracking)
 
         notes:
 
-          likedBy : References blog(blogName).
+          likedBy : References blog(blogName).  
 
           date :  Date the post was authored.
 

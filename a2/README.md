@@ -8,7 +8,7 @@ Requirements
   + Node.js
   + SQLite3
   + Sequelize - (Used by models.js to communicate with the database)
-  + Express - (for ruiting API requests)
+  + Express - (for routing API requests)
   + Cheerio
 
 Usage

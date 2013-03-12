@@ -83,3 +83,19 @@ to the database throught the functions in models.js.
 `model.js`
 
  :    Initializes the database (if it doesn't exist), and contains functions that query the database.
+
+
+Database Structure
+==================
+
+Blogs(blogName)
+
+Posts(id, likedBy, url, date, text, image, type, last_track, last_count, increment, sequence, tracking)
+
+  notes:
+
+    likedBy : references blog(blogName)
+
+    date :  date the post was authored
+
+    tracking : JSON object stored as string 

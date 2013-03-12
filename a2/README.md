@@ -95,4 +95,4 @@ Posts(id, likedBy, url, date, text, image, type, last_track, last_count, increme
 
     date :  date the post was authored
 
-    tracking : JSON object stored as string 
+    tracking : Tracking history serialized as JSON.

@@ -72,23 +72,19 @@ exports.getTrends = function(req, res) {
 
     if(req.query.order.toLowerCase() == "trending" || req.query.order.toLowerCase() == "recent") {
         model.getTrends(blogName, req.query.order, limit).success(function(rows){
-
-            trending = [];
-
-            for (row in rows){
+        model.getTrends(blogName, order, limit).success(function(rows){
+            var trending = [];
+            var post;
+            var fields = ["url", "text", "image", "date", "last_track", "last_count", "tracking"];
+            rows.forEach(function(row) {
                 post = {};
-                post.url = row.url;
-                post.text = row.text;
-                post.image = row.image;
-                post.date = row.date;
-                post.last_track = row.last_track;
-                post.last_count = row.last_count;
-                post.tracking = row.tracking
-
+                fields.forEach(function(field) {
+                    post[field] = row[field];
+                });
                 trending.push(post);
-            }
-         });
-        res.json({"trending": trending, "order": req.query.order, "limit": limit});
+            });
+            res.json({"trending": trending, "order": req.query.order, "limit": limit});
+        });
     } else {
         throw 'Order not specified: pick Trending or Recent';
     }

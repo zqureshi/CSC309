@@ -56,11 +56,14 @@ exports.follow = function(req, res) {
         validateDomain(blog);
         var onSuccess = function(request, response, row) {
             if(row) {
-                response.json(400, {error:'Blog already tracked'});
+                //blog already tracked --do not send to db
+                response.json({success:true});
             } else {
                 model.addBlog(blog).success(function() {
                     response.json({success:true});
-                }).fail(function(err) {response.json(400, {error:err})});
+                }).fail(function(err){
+                    response.json(400, {error:err})
+                    });
             }
         };
         findBlog(req, res, blog, onSuccess);

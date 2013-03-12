@@ -85,14 +85,16 @@ to the database throught the functions in models.js.
 Database Structure
 ==================
 
-Blogs(blogName)
+`dq.sqlite`
 
-Posts(id, likedBy, url, date, text, image, type, last_track, last_count, increment, sequence, tracking)
+:   Blogs(blogName)
+:   Posts(id, likedBy, url, date, text, image, type, last_track, last_count, increment, sequence, tracking)
 
-  notes:
+        notes:
 
-    likedBy : references blog(blogName)
+          likedBy : References blog(blogName).
 
-    date :  date the post was authored
+          date :  Date the post was authored.
 
-    tracking : Tracking history serialized as JSON.
+          tracking : Tracking history serialized as JSON.
+

@@ -97,7 +97,3 @@ exports.getTrends = function(req, res) {
   }
 };
 
-req = new Object();
-res = new Object();
-exports.getTrends(req, res);
-console.log(res);

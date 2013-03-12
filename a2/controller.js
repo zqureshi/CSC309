@@ -70,13 +70,13 @@ exports.getTrends = function(req, res) {
             };
     }
 
-    if(req.query.order == "Trending" || req.query.order == "Recent") {
+    if(req.query.order.toLowerCase() == "trending" || req.query.order.toLowerCase() == "recent") {
         model.getTrends(blogName, req.query.order, limit).success(function(rows){
 
             trending = [];
 
             for (row in rows){
-                post = new Object();
+                post = {};
                 post.url = row.url;
                 post.text = row.text;
                 post.image = row.image;

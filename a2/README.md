@@ -80,12 +80,14 @@ to the database throught the functions in models.js.
 
  :    Initializes the database (if it doesn't exist), and contains functions that query the database.
 
+\newpage
+
 Sequence Diagrams
 =================
 
-![Alt text](./Tumblr Sequence Diagram.png)  
-    
-![Alt text](./User-Server Sequence Diagram.png)
+![Tumblr Interaction](./tumblr-diagram.png)\
+
+![User/Server Interaction](./user-server-diagram.png)\
 
 
 Database Structure

@@ -80,10 +80,10 @@ exports.follow = function(req, res) {
 exports.getTrends = function(req, res) {
     try {
         var blogName;
-        var limit = req.body.limit || 20;   //defaults to 20 posts
+        var limit = req.query.limit || 20;   //defaults to 20 posts
 
         var proceed = function(request, response, blog, lim) {
-            var order = request.body.order && request.body.order.toLowerCase();
+            var order = request.query.order && request.query.order.toLowerCase();
             if(order == "trending" || order == "recent") {
                 model.getTrends(blog, order, lim)
                     .success(function(rows){

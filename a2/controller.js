@@ -92,8 +92,7 @@ exports.follow = function(req, res) {
 exports.getTrends = function(req, res) {
     try {
         var blogName;
-        var limit = req.query.limit || 20; //defaults to 20 posts
-        limit = parseInt(limit);
+        var limit = parseInt(req.query.limit || 20); //defaults to 20 posts
         if(isNaN(limit) || limit <= 0) {
             throw 'Invalid parameter: limit has to be a number'
         }

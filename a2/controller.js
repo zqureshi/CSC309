@@ -4,6 +4,15 @@
 var model;
 
 /**
+ * HTTP Error Codes
+ *
+ * @param dbModels
+ */
+var BAD_REQUEST = 400
+  , NOT_FOUND = 403
+  , SERVER_ERROR = 500;
+
+/**
  * Set database models.
  *
  * @param dbModels
@@ -39,7 +48,7 @@ function findBlog(req, res, blog, callback) {
             callback(req, res, row);
         })
         .fail(function(err) {
-            res.json(400, {error:err});
+            res.json(SERVER_ERROR, {error:err});
         });
 }
 
@@ -62,14 +71,14 @@ exports.follow = function(req, res) {
                 model.addBlog(blog).success(function() {
                     response.json({success:true});
                 }).fail(function(err){
-                    response.json(400, {error:err})
-                    });
+                    response.json(SERVER_ERROR, {error:err})
+                });
             }
         };
         findBlog(req, res, blog, onSuccess);
     }
     catch(e) {
-        res.json(400, {error: e});
+        res.json(BAD_REQUEST, {error: e});
     }
 };
 
@@ -104,10 +113,10 @@ exports.getTrends = function(req, res) {
                         response.json({"trending": trending, "order": order, "limit": lim});
                     })
                     .fail(function(err) {
-                        response.json(400, {error: err});
+                        response.json(SERVER_ERROR, {error: err});
                     });
             } else {
-                response.json(400, {error: 'Order not specified: pick Trending or Recent'});
+                response.json(BAD_REQUEST, {error: 'Order not specified: pick Trending or Recent'});
             }
         };
 
@@ -116,9 +125,8 @@ exports.getTrends = function(req, res) {
             var onSuccess = function(request, response, row) {
                 if(row) {
                     proceed(request, response, blogName, limit)
-                }
-                else {
-                    response.json(400, {error: 'Blog not tracked'});
+                } else {
+                    response.json(NOT_FOUND, {error: 'Blog not tracked'});
                 }
             };
             findBlog(req, res, blogName, onSuccess);
@@ -127,7 +135,7 @@ exports.getTrends = function(req, res) {
             proceed(req, res, blogName, limit);
         }
     } catch(e) {
-        res.json(400, {error: e});
+        res.json(BAD_REQUEST, {error: e});
     }
 };
 

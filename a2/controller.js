@@ -121,7 +121,6 @@ exports.getTrends = function(req, res) {
         };
 
         if (blogName = req.params.blogName){
-            validateDomain(blogName);
             var onSuccess = function(request, response, row) {
                 if(row) {
                     proceed(request, response, blogName, limit)

@@ -9,7 +9,7 @@ var model;
  * @param dbModels
  */
 var BAD_REQUEST = 400
-  , NOT_FOUND = 403
+  , NOT_FOUND = 404
   , SERVER_ERROR = 500;
 
 /**

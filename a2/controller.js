@@ -47,7 +47,7 @@ function findBlog(req, res, blog, callback) {
         .success(function(row){
             callback(req, res, row);
         })
-        .fail(function(err) {
+        .error(function(err) {
             res.json(SERVER_ERROR, {error:err});
         });
 }
@@ -70,7 +70,7 @@ exports.follow = function(req, res) {
             } else {
                 model.addBlog(blog).success(function() {
                     response.json({success:true});
-                }).fail(function(err){
+                }).error(function(err){
                     response.json(SERVER_ERROR, {error:err})
                 });
             }
@@ -112,7 +112,7 @@ exports.getTrends = function(req, res) {
                         });
                         response.json({"trending": trending, "order": order, "limit": lim});
                     })
-                    .fail(function(err) {
+                    .error(function(err) {
                         response.json(SERVER_ERROR, {error: err});
                     });
             } else {

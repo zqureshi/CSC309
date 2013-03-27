@@ -1,0 +1,78 @@
+
+
+
+
+/* Basic styles *//*
+
+.rwd-example div {
+    text-align:left;
+    border-color:#ddd;
+    margin-bottom:1em;
+}
+.rwd-example p {
+    color:#777;
+    line-height:140%
+}
+
+*/
+/* Stack all blocks to start *//*
+
+.rwd-example .ui-block-a,
+.rwd-example .ui-block-b,
+.rwd-example .ui-block-c {
+    width: 100%;
+    float:none;
+}
+*/
+/* 1st breakpoint - Float B and C, leave A full width on top *//*
+@media all and (min-width: 34em){
+    .rwd-example div {
+        min-height:12em;
+    }
+    .rwd-example .ui-block-b,
+    .rwd-example .ui-block-c {
+        float:left;
+        width: 49.95%;
+    }
+    .rwd-example .ui-block-b p,
+    .rwd-example .ui-block-c p {
+        font-size:.8em;
+
+    }
+}
+
+*//* 2nd breakpoint - Float all, 50/25/25 *//*
+@media all and (min-width: 46em){
+
+    .rwd-example div {
+        min-height:17em;
+    }
+    .rwd-example .ui-block-a,
+    .rwd-example .ui-block-c {
+        float:left;
+        width: 49.95%;
+    }
+    .rwd-example .ui-block-b,
+    .rwd-example .ui-block-c {
+        float:left;
+        width: 24.925%;
+    }
+}
+
+*//* 3rd breakpoint - Bump up font size at very wide screens *//*
+@media all and (min-width: 66em){
+
+    .rwd-example {
+        font-size:125%;
+    }
+    .rwd-example .ui-block-a,
+    .rwd-example .ui-block-c {
+        float:left;
+        width: 49.95%;
+    }
+    .rwd-example .ui-block-b,
+    .rwd-example .ui-block-c {
+        float:left;
+        width: 24.925%;
+    }
+}*/

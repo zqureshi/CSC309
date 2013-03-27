@@ -11,11 +11,6 @@ $(document).ready(function(){
     var favourites = []; //will hold JSON
     var loadIndex = 0;   //index first undisplayed tweet
 
-    /*load the tweets from the local file*/
-    $.getJSON('./favs.json', function(data){
-        favourites.push(data);
-    });
-
     /** Takes a tweet object from the JSON array favourites and builds then
      * returns a div containing to relevant information.
      * @param {JSON} tweetObject
@@ -34,10 +29,29 @@ $(document).ready(function(){
      */
     var populateMain = function(){
            var i = 0;
-           while(i<10){
+           while( (i < 10) & (loadIndex + i < favourites.length) ){
                var newTweet = buildTweet(favourites[loadIndex + i]);
-               //TODO append new Tweet to display
+
+               /* id=index in array to easily build user profile on tweet click*/
+               newTweet.attr('id', loadIndex + i);
+
+               $('.ui-block-a').append(newTweet);
                i++;
+               if(loadIndex + i < favourites.length){
+                   $('.ui-block-a').append("<div><p>That's all folks!</p></div>"); //will only execute once
+               }
            }
     }
+
+    /*load the tweets from the local file*/
+    $.getJSON('./favs.json', function(data){
+        favourites.push(data);
+        populateMain();
+    });
+
+
+    //TODO implement: event handler for scrolling, call populateMain() on scroll down.
+    //$(something).something(function(){ populateMain(); }
+
+
 });

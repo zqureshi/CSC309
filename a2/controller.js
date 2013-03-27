@@ -4,6 +4,15 @@
 var model;
 
 /**
+ * HTTP Error Codes
+ *
+ * @param dbModels
+ */
+var BAD_REQUEST = 400
+  , NOT_FOUND = 404
+  , SERVER_ERROR = 500;
+
+/**
  * Set database models.
  *
  * @param dbModels
@@ -38,8 +47,8 @@ function findBlog(req, res, blog, callback) {
         .success(function(row){
             callback(req, res, row);
         })
-        .fail(function(err) {
-            res.json(400, {error:err});
+        .error(function(err) {
+            res.json(SERVER_ERROR, {error:err});
         });
 }
 
@@ -56,17 +65,20 @@ exports.follow = function(req, res) {
         validateDomain(blog);
         var onSuccess = function(request, response, row) {
             if(row) {
-                response.json(400, {error:'Blog already tracked'});
+                //blog already tracked --do not send to db
+                response.json({success:true});
             } else {
                 model.addBlog(blog).success(function() {
                     response.json({success:true});
-                }).fail(function(err) {response.json(400, {error:err})});
+                }).error(function(err){
+                    response.json(SERVER_ERROR, {error:err})
+                });
             }
         };
         findBlog(req, res, blog, onSuccess);
     }
     catch(e) {
-        res.json(400, {error: e});
+        res.json(BAD_REQUEST, {error: e});
     }
 };
 
@@ -80,7 +92,11 @@ exports.follow = function(req, res) {
 exports.getTrends = function(req, res) {
     try {
         var blogName;
-        var limit = req.query.limit || 20;   //defaults to 20 posts
+        var limit = parseInt(req.query.limit || 20); //defaults to 20 posts
+        if(isNaN(limit) || limit <= 0) {
+            throw 'Invalid parameter: limit has to be a number'
+        }
+
 
         var proceed = function(request, response, blog, lim) {
             var order = request.query.order && request.query.order.toLowerCase();
@@ -100,22 +116,20 @@ exports.getTrends = function(req, res) {
                         });
                         response.json({"trending": trending, "order": order, "limit": lim});
                     })
-                    .fail(function(err) {
-                        response.json(400, {error: err});
+                    .error(function(err) {
+                        response.json(SERVER_ERROR, {error: err});
                     });
             } else {
-                response.json(400, {error: 'Order not specified: pick Trending or Recent'});
+                response.json(BAD_REQUEST, {error: 'Order not specified: pick Trending or Recent'});
             }
         };
 
         if (blogName = req.params.blogName){
-            validateDomain(blogName);
             var onSuccess = function(request, response, row) {
                 if(row) {
                     proceed(request, response, blogName, limit)
-                }
-                else {
-                    response.json(400, {error: 'Blog not tracked'});
+                } else {
+                    response.json(NOT_FOUND, {error: 'Blog not tracked'});
                 }
             };
             findBlog(req, res, blogName, onSuccess);
@@ -124,7 +138,7 @@ exports.getTrends = function(req, res) {
             proceed(req, res, blogName, limit);
         }
     } catch(e) {
-        res.json(400, {error: e});
+        res.json(BAD_REQUEST, {error: e});
     }
 };
 

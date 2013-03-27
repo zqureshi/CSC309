@@ -24,6 +24,10 @@ Start Server:
 
     $ ./node_modules/.bin/forever app.js
 
+Server for Marking:
+
+<http://greywolf.cdf.toronto.edu:31315>
+
 RESTful API
 ===========
 
@@ -63,7 +67,6 @@ updated information for the tracked blogs. The information is passed
 to the database throught the functions in models.js.
 
 
-
 `app.js`
 
  :    The bare node.js server that listens to HTTP requests and routes to
@@ -80,6 +83,15 @@ to the database throught the functions in models.js.
 `model.js`
 
  :    Initializes the database (if it doesn't exist), and contains functions that query the database.
+
+\newpage
+
+Sequence Diagrams
+=================
+
+![Tumblr Interaction](./tumblr-diagram.png)\
+
+![User/Server Interaction](./user-server-diagram.png)\
 
 
 Database Structure

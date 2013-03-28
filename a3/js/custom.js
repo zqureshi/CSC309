@@ -25,6 +25,7 @@ $(document).ready(function(){
         });
         var img = $('<img/>', {
             'src' : tweetObject.user.profile_image_url
+            //TODO image resizing in both layouts
         });
         var name = $('<h2/>', {
             'html': tweetObject.user.name
@@ -75,6 +76,13 @@ $(document).ready(function(){
 
     //TODO implement: event handler for scrolling, call populateMain() on scroll down.
     //$(something).something(function(){ populateMain(); }
+
+    //TODO implement event handler for click on chevron in list view , expands user info
+    /* this guy: <span class="ui-icon ui-icon-arrow-r ui-icon-shadow"> </span>
+    the <li> element it's in has and id # that is the index of the tweetObject in the JSON array
+    to make looking up user info easier */
+
+    //TODO implement lightbox popup for links to pictures
 
 
 });

@@ -24,6 +24,8 @@
     overflow: visible;
 }
 
+/* TODO fix text wrap on headers in list view -- name wraps, handler doesn't*/
+
 /* 768px: 2 column tiled layout.  */
 @media all and (min-width: 768px){
     .my-page .ui-content {

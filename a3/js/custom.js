@@ -67,6 +67,15 @@ $(document).ready(function(){
            $('#tweetList').listview('refresh')
     }
 
+    /*infinite Scroll*/
+    $(window).scroll(function(){
+       if( $(window).scrollTop() == $(document).height() - $(window).height()){
+           //load more post
+           populateMain();
+       }
+    });
+
+
     /*load the tweets from the local file*/
     $.getJSON('./favs.json', function(data){
         favourites = data;

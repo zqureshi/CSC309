@@ -17,10 +17,29 @@ $(document).ready(function(){
      * @returns {*|jQuery|HTMLElement}
      */
     var buildTweet = function(tweetObject){
-        var tweetContainer = $('<div/>', {
+        var tweetContainer = $('<li/>', {
             'class':'tweet-container'
         });
-        //TODO: implement
+        var link = $('<a/>', {
+            'href':'#'
+        });
+        var img = $('<img/>', {
+            'src' : '"' + tweetObject.user.profile_image_url + '"'
+        });
+        var name = $('<h2/>', {
+            'html': tweetObject.user.name
+        });
+        var handler = $('<span/>', {
+            'class':'user-handler',
+            'html': '@' + tweetObject.user.screen_name
+        });
+        var text = $('<p/>', {
+            'html': tweetObject.text
+        });
+
+        name.append(handler);
+        link.append(img, name, text);
+        tweetContainer.append(link);
         return tweetContainer;
     }
 
@@ -35,7 +54,7 @@ $(document).ready(function(){
                /* id=index in array to easily build user profile on tweet click*/
                newTweet.attr('id', loadIndex + i);
 
-               $('.ui-block-a').append(newTweet);
+               $('.list-container').append(newTweet);
                i++;
                if(loadIndex + i < favourites.length){
                    $('.ui-block-a').append("<div><p>That's all folks!</p></div>"); //will only execute once
@@ -45,7 +64,7 @@ $(document).ready(function(){
 
     /*load the tweets from the local file*/
     $.getJSON('./favs.json', function(data){
-        favourites.push(data);
+        favourites = data;
         populateMain();
     });
 

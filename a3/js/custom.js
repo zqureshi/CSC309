@@ -24,7 +24,7 @@ $(document).ready(function(){
             'href':'#'
         });
         var img = $('<img/>', {
-            'src' : '"' + tweetObject.user.profile_image_url + '"'
+            'src' : tweetObject.user.profile_image_url
         });
         var name = $('<h2/>', {
             'html': tweetObject.user.name

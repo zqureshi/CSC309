@@ -43,29 +43,33 @@ $(document).ready(function(){
         link.append(img, name, text);
         tweetContainer.append(link);
         return tweetContainer;
-    }
+    };
 
     /** Uses global variables favourites and loadIndex to load the 10 next tweets
      * into the main display window. Returns void.
      */
     var populateMain = function(){
-           var i = 0;
-           while( (i < 10) & (loadIndex + i < favourites.length) ){
-               var newTweet = buildTweet(favourites[loadIndex + i]);
 
-               /* id=index in array to easily build user profile on tweet click*/
-               newTweet.attr('id', loadIndex + i);
+        var i = 0;
+        while ((loadIndex < favourites.length) && (i < 10)) {
+            var newTweet = buildTweet(favourites[loadIndex]);
 
-               $(newTweet).appendTo("#tweetList");
-               i++;
+            /* id=index in array to easily build user profile on tweet click*/
+            newTweet.attr('id', loadIndex);
 
-               /*if(loadIndex + i < favourites.length){
-               //TODO find something cheeky to put at the end
-                   $('.ui-block-a').append("<div><p>That's all folks!</p></div>"); //will only execute once
-               } */
-           }
-           $('#tweetList').listview('refresh')
-    }
+            $(newTweet).appendTo("#tweetList");
+            i++;
+            loadIndex++;
+
+
+            if (loadIndex == favourites.length) {    //will only ever execute once
+               /* var sentinel = "<li id='sentinel'><a href='#'><h2>The End</h2><p>That's all folks!</p></a></li>"  */
+                $('#tweetList').append("<li id='sentinel'><a href=''#'><img src='img/icecream_star.png'><h2>The End</h2>"
+                + "<p>That's all folks!</p></a></li>");
+            }
+        }
+        $('#tweetList').listview('refresh');
+    };
 
     /*infinite Scroll*/
     $(window).scroll(function(){

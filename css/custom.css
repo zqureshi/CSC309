@@ -1,78 +1,126 @@
-
-
-
-
-/* Basic styles *//*
-
-.rwd-example div {
-    text-align:left;
-    border-color:#ddd;
-    margin-bottom:1em;
+#tweetList {
+    margin-left:auto;
+    margin-right:auto;
 }
-.rwd-example p {
-    color:#777;
-    line-height:140%
+/*space @handler away from actual name*/
+.user-handler {
+    margin-left: 7px;
+    color: #a2b8b4;
+}
+/*tweet text colour*/
+.my-page .ui-li-desc {
+    color: #c0c0c0;
 }
 
-*/
-/* Stack all blocks to start *//*
-
-.rwd-example .ui-block-a,
-.rwd-example .ui-block-b,
-.rwd-example .ui-block-c {
-    width: 100%;
-    float:none;
-}
-*/
-/* 1st breakpoint - Float B and C, leave A full width on top *//*
-@media all and (min-width: 34em){
-    .rwd-example div {
-        min-height:12em;
-    }
-    .rwd-example .ui-block-b,
-    .rwd-example .ui-block-c {
-        float:left;
-        width: 49.95%;
-    }
-    .rwd-example .ui-block-b p,
-    .rwd-example .ui-block-c p {
-        font-size:.8em;
-
-    }
+.my-page .ui-listview .ui-li.ui-btn {
+    background-image: none;
+    border-color: #222;     /*box border*/
 }
 
-*//* 2nd breakpoint - Float all, 50/25/25 *//*
-@media all and (min-width: 46em){
-
-    .rwd-example div {
-        min-height:17em;
-    }
-    .rwd-example .ui-block-a,
-    .rwd-example .ui-block-c {
-        float:left;
-        width: 49.95%;
-    }
-    .rwd-example .ui-block-b,
-    .rwd-example .ui-block-c {
-        float:left;
-        width: 24.925%;
-    }
+/* Make text wrap. */
+.my-page .ui-listview .ui-li-heading,
+.my-page .ui-listview .ui-li-desc {
+    white-space: normal;
+    overflow: visible;
 }
 
-*//* 3rd breakpoint - Bump up font size at very wide screens *//*
-@media all and (min-width: 66em){
+/* TODO fix text wrap on headers in list view -- name wraps, handler doesn't*/
 
-    .rwd-example {
-        font-size:125%;
+/* 768px: 2 column tiled layout.  */
+@media all and (min-width: 768px){
+    .my-page .ui-content {
+        padding: 9px;
     }
-    .rwd-example .ui-block-a,
-    .rwd-example .ui-block-c {
-        float:left;
-        width: 49.95%;
+    .my-page .ui-listview .ui-li.ui-btn {
+        float: left;
+        width: 46%; /* 33.3333% incl. 2 x 1.2% margin */
+        height: 232px;
+        margin: 9px 1.2%;
+        border-width: 0; /* The 1px border would break the layout so we set it on .ui-btn-inner instead. */
     }
-    .rwd-example .ui-block-b,
-    .rwd-example .ui-block-c {
-        float:left;
-        width: 24.925%;
+    /* If you don't want a border at all, just set "border: none;" here to negate the semi white top border */
+    .my-page .ui-listview .ui-li.ui-btn-inner {
+        border: none;
+        border-width: 1px;
+        margin: -1px;
     }
-}*/
+    .my-page .ui-listview .ui-btn-inner,
+    .my-page .ui-listview .ui-btn-text,
+    .my-page .ui-listview .ui-link-inherit,
+    .my-page .ui-listview .ui-li-thumb {
+        width: 100%;
+        height: 100%;
+        display: block;
+        overflow: hidden;
+    }
+    .my-page .ui-listview .ui-link-inherit {
+        padding: 0 !important;
+        position: relative;
+    }
+    /* rounded corners on <li> tiles */
+    .my-page .ui-listview .ui-li,
+    .my-page .ui-listview .ui-btn-text,
+    .my-page .ui-listview .ui-link-inherit,
+    .my-page .ui-listview .ui-li-thumb {
+        border-radius: inherit;
+    }
+    .my-page .ui-listview .ui-li-thumb {
+        height: auto; /* keep aspect ratio. */
+        max-width: 100%;
+        max-height: none;
+        margin: 0;
+        left: 0;
+       /* z-index: -1;*/
+    }
+    /* Hide the chevron icon */
+    .my-page .ui-listview .ui-icon {
+        display: none;
+    }
+    /* position text of it's container at bottom. */
+    .my-page .ui-listview .ui-li-heading,
+    .my-page .ui-listview .ui-li-desc {
+        position: absolute;
+        left: 0;
+        right: 0;
+    }
+    /* Text position */
+    .my-page .ui-listview .ui-li-heading {
+        margin: 0;
+        bottom: 50%;
+    }
+    .my-page .ui-listview .ui-li-desc {
+        margin: 0;
+        padding: 0 20px;
+        min-height: 50%;
+        bottom: 0;
+        line-height: 1.5;
+    }
+    /* Semi transparent background and different position if there is a thumb */
+    .ui-listview .ui-li-has-thumb .ui-li-heading,
+    .ui-listview .ui-li-has-thumb .ui-li-desc {
+        background: #111;
+        background: rgba(0,0,0,.8);
+        background-clip: padding-box;
+    }
+    .ui-listview .ui-li-has-thumb .ui-li-heading {
+        padding: 10px 10px 5px 10px;
+        bottom: 24%;
+    }
+    .ui-listview .ui-li-has-thumb .ui-li-desc {
+        padding: 0 10px;
+        min-height: 24%;
+    }
+
+    /* slight black glow all the time */
+    .my-page .ui-listview .ui-btn {
+        box-shadow: 0px 0px 9px #111;
+    }
+    /* Blue glow on Hover. */
+    .my-page .ui-listview .ui-btn:hover {
+        box-shadow: 0px 0px 12px #387bbe;
+    }
+    /* Slow down focus glow */
+    .my-page .ui-listview .ui-btn {
+        transition: all 500ms ease;
+    }
+}

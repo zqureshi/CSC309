@@ -7,6 +7,11 @@
     margin-left: 7px;
     color: #a2b8b4;
 }
+
+#sentinel span{
+    display:none;
+}
+/*<span class="ui-icon ui-icon-arrow-r ui-icon-shadow"> </span>*/
 /*tweet text colour*/
 .my-page .ui-li-desc {
     color: #c0c0c0;

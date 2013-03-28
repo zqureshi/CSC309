@@ -35,6 +35,7 @@ $(document).ready(function(){
         });
         var text = $('<p/>', {
             'html': tweetObject.text
+            //TODO parse the text for @handlers and links
         });
 
         name.append(handler);
@@ -54,12 +55,15 @@ $(document).ready(function(){
                /* id=index in array to easily build user profile on tweet click*/
                newTweet.attr('id', loadIndex + i);
 
-               $('.list-container').append(newTweet);
+               $(newTweet).appendTo("#tweetList");
                i++;
-               if(loadIndex + i < favourites.length){
+
+               /*if(loadIndex + i < favourites.length){
+               //TODO find something cheeky to put at the end
                    $('.ui-block-a').append("<div><p>That's all folks!</p></div>"); //will only execute once
-               }
+               } */
            }
+           $('#tweetList').listview('refresh')
     }
 
     /*load the tweets from the local file*/

@@ -5,8 +5,22 @@
 /*space @handler away from actual name*/
 .user-handler {
     margin-left: 7px;
-    color: #a2b8b4;
+    color: #a2b8c3;
 }
+.intweet-link{
+   color: #a2b8c3;
+}
+
+/*hide chevrons*/
+.ui-li >  span{
+    display:none;
+}
+
+/*supress default click down stylings on tweets*/
+.ui-btn-down-a{
+    color:
+}
+
 /*tweet text colour*/
 .my-page .ui-li-desc {
     color: #c0c0c0;

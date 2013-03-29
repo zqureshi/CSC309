@@ -10,30 +10,34 @@ $(document).ready(function () {
     var favourites = []; //will hold JSON
     var loadIndex = 0;   //index first undisplayed tweet
 
+
     var buildLink = function (type, object) {
         var obj;
         if (type == 'hashtag') {
             obj = $('<a/>', {
                 "href": "http://twitter.com/search?q=%23" + object.text,
                 "class": "intweet-link",
-                "html": "#" + object.text
+                "html": "#" + object.text,
+                "target": "_blank"
             });
         } else if (type == 'user_mention') {
             obj = $('<a/>', {
                 "href": "http://twitter.com/" + object.screen_name,
                 "class": "intweet-link",
-                "html": "@" + object.screen_name
+                "html": "@" + object.screen_name,
+                "target": "_blank"
             });
         } else if (type == 'url') {
             obj = $('<a/>', {
                 "href": object.expanded_url,
                 "class": "intweet-link",
-                "html": object.display_url
+                "html": object.display_url,
+                "target": "_blank"
             });
         }
         return obj[0].outerHTML;
 
-    }
+    };
 
     var prepareTweetText = function (tweetObject) {
         var text = tweetObject.text;
@@ -61,7 +65,7 @@ $(document).ready(function () {
 
         return text
 
-    }
+    };
 
     /** Takes a tweet object from the JSON array favourites and builds then
      * returns a div containing to relevant information.
@@ -124,7 +128,7 @@ $(document).ready(function () {
     /*Infinite Scroll*/
     $(window).scroll(function () {
         if ($(window).scrollTop() == $(document).height() - $(window).height()) {
-            //load more post
+            //load more posts
             populateMain();
         }
     });
@@ -134,6 +138,8 @@ $(document).ready(function () {
         favourites = data;
         populateMain();
     });
+
+
 
 
     //TODO implement event handler for click on chevron in list view , expands user info

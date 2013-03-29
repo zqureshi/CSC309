@@ -7,8 +7,16 @@
     margin-left: 7px;
     color: #a2b8c3;
 }
-.intweet-link{
-   color: #a2b8c3;
+.user-handler:hover{
+text-shadow: 0.5px 0.5px #387bbe;
+    transition: all 500ms ease;
+}
+
+.intweet-link{ color: #a2b8c3 }
+.intweet-link:visited{ color: #4e7772 }
+.intweet-link:hover{
+    text-shadow: 0.5px 0.5px #387bbe;
+    transition: all 500ms ease;
 }
 
 /*hide chevrons*/
@@ -16,10 +24,10 @@
     display:none;
 }
 
-/*supress default click down stylings on tweets*/
+/*supress default click down stylings on tweets
 .ui-btn-down-a{
     color:
-}
+}                                              */
 
 /*tweet text colour*/
 .my-page .ui-li-desc {

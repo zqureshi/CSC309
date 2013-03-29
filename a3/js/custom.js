@@ -123,7 +123,7 @@ $(document).ready(function () {
         var name = $('<h2/>', {
             'html': tweetObject.user.name + " "
         });
-        var handler = $('<div/>', {
+        var handler = $('<span/>', {
             'class': 'user-handler',
             'html': '@' + tweetObject.user.screen_name
         });
@@ -184,7 +184,7 @@ $(document).ready(function () {
 
     //TODO User Pages
     /* these are the elements that when clicked, expand user info:
-     <div> class="user-handler"></div>
+     <span> class="user-handler"></span>
      and
      <img class="ui-li-thumb" src="http://a0.twimg.com/profile_images/282368198
     the <li> element that each of these is inside has an id # that is the index

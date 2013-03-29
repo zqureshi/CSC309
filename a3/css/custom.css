@@ -12,6 +12,10 @@
 text-shadow: 0.5px 0.5px #387bbe;
     transition: all 500ms ease;
 }
+.ui-li-has-arrow .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li-has-arrow {
+    padding-left: 125px;
+    padding-right: 20px;
+}
 
 .intweet-link{ color: #a2b8c3 !important}
 .intweet-link:visited{ color: #4e7772 !important }
@@ -25,14 +29,22 @@ text-shadow: 0.5px 0.5px #387bbe;
     display: none;
 }
 
-
-/*supress default click down stylings on tweets, fix cursor
-.ui-btn-down-a{
-    color:
+.ui-li-thumb{
+    height: 100%;
+    max-height: 130px;
+    max-width: 100px;
 }
- TODO remove global <a> inside each div, fix views
-   */
-
+.ui-li-has-thumb .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li-has-thumb {
+    min-height: 79px;
+}
+/*TODO supress default click down stylings on tweets, fix cursor
+.ui-btn-down-a {
+    background: linear-gradient(#202020, #2C2C2C) repeat scroll 0 0 #222222;
+    border: 1px solid #000000;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-shadow: 0 1px 0 #111111;
+}    */
 
 /*tweet text colour*/
 .my-page .ui-li-desc {
@@ -50,8 +62,6 @@ text-shadow: 0.5px 0.5px #387bbe;
     white-space: normal;
     overflow: visible;
 }
-
-/* TODO fix text wrap on headers in list view -- name wraps, handler doesn't*/
 
 /* 768px: 2 column tiled layout.  */
 @media all and (min-width: 768px){
@@ -122,6 +132,7 @@ text-shadow: 0.5px 0.5px #387bbe;
    }
     .user-handler {
          padding-top: 5px;
+        display: block;
      }
 
     .ui-listview .ui-li-has-thumb .ui-li-desc {
@@ -149,7 +160,7 @@ text-shadow: 0.5px 0.5px #387bbe;
     }
 }
 /*3 columns*/
-@media all and (min-width: 1020px){
+@media all and (min-width: 1150px){
     .my-page .ui-listview .ui-li.ui-btn {
         width: 30%; /* 33.3333% incl. 2 x 1.2% margin */
         margin: 9px 1.2%;

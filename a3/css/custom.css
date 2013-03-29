@@ -1,11 +1,18 @@
+/*TODO do something about pictures for widths < 380px*/
+
 #tweetList {
     margin-left:auto;
     margin-right:auto;
+}
+
+a.ui-link-inherit{
+    cursor: default;
 }
 /*space @handler away from actual name*/
 .user-handler {
     margin-left: 7px;
     color: #a2b8c3;
+    cursor: pointer;
 }
 
 .user-handler:hover{
@@ -17,8 +24,13 @@ text-shadow: 0.5px 0.5px #387bbe;
     padding-right: 20px;
 }
 
-.intweet-link{ color: #a2b8c3 !important}
+.intweet-link{
+    color: #a2b8c3 !important;
+    cursor: pointer;
+}
+
 .intweet-link:visited{ color: #4e7772 !important }
+
 .intweet-link:hover{
     text-shadow: 0.5px 0.5px #387bbe   !important;    /*TODO deal with these !importants -_-*/
     transition: all 500ms ease         !important;
@@ -37,7 +49,7 @@ text-shadow: 0.5px 0.5px #387bbe;
 .ui-li-has-thumb .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li-has-thumb {
     min-height: 79px;
 }
-/*TODO supress default click down stylings on tweets, fix cursor
+/*TODO supress default click down stylings on tweets
 .ui-btn-down-a {
     background: linear-gradient(#202020, #2C2C2C) repeat scroll 0 0 #222222;
     border: 1px solid #000000;
@@ -45,6 +57,9 @@ text-shadow: 0.5px 0.5px #387bbe;
     font-weight: bold;
     text-shadow: 0 1px 0 #111111;
 }    */
+
+/*TODO figure out why photo popup link stays active, disable*/
+
 
 /*tweet text colour*/
 .my-page .ui-li-desc {
@@ -167,3 +182,4 @@ text-shadow: 0.5px 0.5px #387bbe;
         border-width: 0; /* The 1px border would break the layout so we set it on .ui-btn-inner instead. */
     }
 }
+

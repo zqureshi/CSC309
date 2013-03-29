@@ -118,7 +118,6 @@ $(document).ready(function () {
         });
         var img = $('<img/>', {
             'src': tweetObject.user.profile_image_url
-            //TODO image resizing in both layouts
         });
         var name = $('<h2/>', {
             'html': tweetObject.user.name + " "

@@ -8,7 +8,32 @@
 $(document).ready(function () {
 
     var favourites = []; //will hold JSON
-    var loadIndex = 0;   //index first undisplayed tweet
+    var loadIndex = 0;   //index first undisplayed tweet\
+
+    var buildPhotoPopup = function(media_url){
+        var container = $('<div/>', {
+            "data-role": "popup",
+            "id": "photobox-tweet" + loadIndex,
+            "data-overlay-theme": "a",
+            "data-dismissable": "false"
+        });
+        var close = $('<a/>', {
+            "href": "#",
+            "data-rel": "back",
+            "data-role": "button",
+            "data-theme": "a",
+            "data-icon": "delete",
+            "data-iconpos": "notext",
+            "class": "ui-btn-right",
+            "html": "Close"
+        });
+        var img = $('<img/>',{
+            "src": media_url
+        });
+        container.append(close, img);
+        return container;
+    }
+
 
     var buildLink = function (type, object) {
         var obj;
@@ -16,24 +41,35 @@ $(document).ready(function () {
             obj = $('<a/>', {
                 "href": "http://twitter.com/search?q=%23" + object.text,
                 "class": "intweet-link",
-                "html": "#" + object.text
+                "html": "#" + object.text,
+                "target": "_blank"
             });
         } else if (type == 'user_mention') {
             obj = $('<a/>', {
                 "href": "http://twitter.com/" + object.screen_name,
                 "class": "intweet-link",
-                "html": "@" + object.screen_name
+                "html": "@" + object.screen_name,
+                "target": "_blank"
             });
         } else if (type == 'url') {
             obj = $('<a/>', {
                 "href": object.expanded_url,
                 "class": "intweet-link",
-                "html": object.display_url
+                "html": object.display_url,
+                "target": "_blank"
+            });
+        } else if (type == 'media') {
+            obj = $('<a/>', {
+                "href":'#photobox-tweet' + loadIndex,
+                "class": "intweet-link intweet-media",
+                "html": object.display_url,
+                "data-rel": "popup",
+                "data-position-to": "window",
+                "data-transition" : "fade"
             });
         }
         return obj[0].outerHTML;
-
-    }
+    };
 
     var prepareTweetText = function (tweetObject) {
         var text = tweetObject.text;
@@ -58,10 +94,15 @@ $(document).ready(function () {
             })
         }
         //tweetObject.entities.media
-
+        if (tweetObject.entities.media) {
+            tweetObject.entities.media.forEach(function (media) {
+                var link = buildLink('media', media);
+                text = text.replace(media.url, link);
+                })
+        }
         return text
 
-    }
+    };
 
     /** Takes a tweet object from the JSON array favourites and builds then
      * returns a div containing to relevant information.
@@ -77,10 +118,9 @@ $(document).ready(function () {
         });
         var img = $('<img/>', {
             'src': tweetObject.user.profile_image_url
-            //TODO image resizing in both layouts
         });
         var name = $('<h2/>', {
-            'html': tweetObject.user.name
+            'html': tweetObject.user.name + " "
         });
         var handler = $('<span/>', {
             'class': 'user-handler',
@@ -88,18 +128,24 @@ $(document).ready(function () {
         });
         var text = $('<p/>', {
             'html': prepareTweetText(tweetObject)
-            //TODO pictures
+
         });
 
         name.append(handler);
         link.append(img, name, text);
         tweetContainer.append(link);
+
+        //build the media popup if the tweet has expandable content
+        if (tweetObject.entities.media){
+            $('.my-page').append(buildPhotoPopup(tweetObject.entities.media[0].media_url)).trigger("create");
+        }
         return tweetContainer;
     };
 
     /** Uses global variables favourites and loadIndex to load the 10 next tweets
-     * into the main display window. Returns void.
-     */
+     * into the main display window.
+     * @returns void
+    */
     var populateMain = function () {
 
         var i = 0;
@@ -124,7 +170,7 @@ $(document).ready(function () {
     /*Infinite Scroll*/
     $(window).scroll(function () {
         if ($(window).scrollTop() == $(document).height() - $(window).height()) {
-            //load more post
+            //load more posts
             populateMain();
         }
     });
@@ -135,13 +181,17 @@ $(document).ready(function () {
         populateMain();
     });
 
+    //TODO User Pages
+    /* these are the elements that when clicked, expand user info:
+     <span> class="user-handler"></span>
+     and
+     <img class="ui-li-thumb" src="http://a0.twimg.com/profile_images/282368198
+    the <li> element that each of these is inside has an id # that is the index
+    global array  "favourites" that has the info you need to build the profile
+    */
 
-    //TODO implement event handler for click on chevron in list view , expands user info
-    /* this guy: <span class="ui-icon ui-icon-arrow-r ui-icon-shadow"> </span>
-     the <li> element it's in has and id # that is the index of the tweetObject in the JSON array
-     to make looking up user info easier */
 
-    //TODO implement lightbox popup for links to pictures
+
 
 
 });

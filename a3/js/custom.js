@@ -8,7 +8,31 @@
 $(document).ready(function () {
 
     var favourites = []; //will hold JSON
-    var loadIndex = 0;   //index first undisplayed tweet
+    var loadIndex = 0;   //index first undisplayed tweet\
+
+    var buildPhotoPopup = function(media_url){
+        var container = $('<div/>', {
+            "data-role": "popup",
+            "id": "photobox-tweet" + loadIndex,
+            "data-overlay-theme": "a",
+            "data-dismissable": "false"
+        });
+        var close = $('<a/>', {
+            "href": "#",
+            "data-rel": "back",
+            "data-role": "button",
+            "data-theme": "a",
+            "data-icon": "delete",
+            "data-iconpos": "notext",
+            "class": "ui-btn-right",
+            "html": "Close"
+        });
+        var img = $('<img/>',{
+            "src": media_url
+        });
+        container.append(close, img);
+        return container;
+    }
 
 
     var buildLink = function (type, object) {
@@ -20,6 +44,7 @@ $(document).ready(function () {
                 "html": "#" + object.text,
                 "target": "_blank"
             });
+            return obj[0].outerHTML;
         } else if (type == 'user_mention') {
             obj = $('<a/>', {
                 "href": "http://twitter.com/" + object.screen_name,
@@ -27,6 +52,7 @@ $(document).ready(function () {
                 "html": "@" + object.screen_name,
                 "target": "_blank"
             });
+            return obj[0].outerHTML;
         } else if (type == 'url') {
             obj = $('<a/>', {
                 "href": object.expanded_url,
@@ -34,8 +60,18 @@ $(document).ready(function () {
                 "html": object.display_url,
                 "target": "_blank"
             });
+            return obj[0].outerHTML;
+        } else if (type == 'media') {
+            obj = $('<a/>', {
+                "href":'#photobox-tweet' + loadIndex,
+                "class": "intweet-link intweet-media",
+                "html": object.display_url,
+                "data-rel": "popup",
+                "data-position-to": "window",
+                "data-transition" : "fade"
+            });
+            return obj[0].outerHTML;
         }
-        return obj[0].outerHTML;
 
     };
 
@@ -62,7 +98,12 @@ $(document).ready(function () {
             })
         }
         //tweetObject.entities.media
-
+        if (tweetObject.entities.media) {
+            tweetObject.entities.media.forEach(function (media) {
+                var link = buildLink('media', media);
+                text = text.replace(media.url, link);
+                })
+        }
         return text
 
     };
@@ -92,12 +133,16 @@ $(document).ready(function () {
         });
         var text = $('<p/>', {
             'html': prepareTweetText(tweetObject)
-            //TODO pictures
+
         });
 
         name.append(handler);
         link.append(img, name, text);
         tweetContainer.append(link);
+
+        if (tweetObject.entities.media){     //TODO deal with the case where there's more than one image
+            $('.my-page').append(buildPhotoPopup(tweetObject.entities.media[0].media_url)).trigger("create");
+        }
         return tweetContainer;
     };
 
@@ -139,6 +184,11 @@ $(document).ready(function () {
         populateMain();
     });
 
+   /* //TODO implement lightbox popup for links to pictures
+    $.('.media').click(function(){
+
+    });*/
+
 
 
 
@@ -147,7 +197,7 @@ $(document).ready(function () {
      the <li> element it's in has and id # that is the index of the tweetObject in the JSON array
      to make looking up user info easier */
 
-    //TODO implement lightbox popup for links to pictures
+
 
 
 });

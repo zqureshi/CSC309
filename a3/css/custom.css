@@ -12,11 +12,11 @@ text-shadow: 0.5px 0.5px #387bbe;
     transition: all 500ms ease;
 }
 
-.intweet-link{ color: #a2b8c3 }
-.intweet-link:visited{ color: #4e7772 }
+.intweet-link{ color: #a2b8c3 !important}
+.intweet-link:visited{ color: #4e7772 !important }
 .intweet-link:hover{
-    text-shadow: 0.5px 0.5px #387bbe;
-    transition: all 500ms ease;
+    text-shadow: 0.5px 0.5px #387bbe;   !important
+    transition: all 500ms ease;         !important
 }
 
 /*hide chevrons*/
@@ -24,10 +24,14 @@ text-shadow: 0.5px 0.5px #387bbe;
     display:none;
 }
 
-/*supress default click down stylings on tweets
+
+/*supress default click down stylings on tweets, fix cursor
 .ui-btn-down-a{
     color:
-}                                              */
+}
+ TODO remove global <a> inside each div, fix views
+   */
+
 
 /*tweet text colour*/
 .my-page .ui-li-desc {

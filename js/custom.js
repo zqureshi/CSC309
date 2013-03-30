@@ -1,6 +1,6 @@
 /**
  * Created with JetBrains WebStorm.
- * User: Owner
+ * User: TigerControl
  * Date: 27/03/13
  * Time: 11:32 AM
  * To change this template use File | Settings | File Templates.
@@ -32,7 +32,7 @@ $(document).ready(function () {
         });
         container.append(close, img);
         return container;
-    }
+    };
 
 
     var buildLink = function (type, object) {
@@ -158,7 +158,6 @@ $(document).ready(function () {
             loadIndex++;
 
             if (loadIndex == favourites.length) {    //will only ever execute once
-                /* var sentinel = "<li id='sentinel'><a href='#'><h2>The End</h2><p>That's all folks!</p></a></li>"  */
                 $('#tweetList').append("<li id='sentinel'><a href=''#'><img src='img/icecream_star.png'><h2>The End</h2>"
                     + "<p>That's all folks!</p></a></li>");
             }
@@ -169,7 +168,7 @@ $(document).ready(function () {
 
     /*Infinite Scroll*/
     $(window).scroll(function () {
-        if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+        if ($(window).scrollTop() >= $(document).height() - $(window).height() - 232) {
             //load more posts
             populateMain();
         }

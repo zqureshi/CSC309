@@ -214,6 +214,10 @@ text-shadow: 0.5px 0.5px #387bbe;
     .my-page .ui-listview .ui-btn {
         transition: all 500ms ease;
     }
+    #sentinel p{
+        text-align: center;
+        font-size: 200%;
+    }
 }
 /*3 columns*/
 @media all and (min-width: 1150px){

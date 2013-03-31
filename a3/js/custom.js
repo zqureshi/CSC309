@@ -8,18 +8,19 @@
 $(document).ready(function () {
 
     var favourites = []; //will hold JSON
-    var loadIndex = 0;   //index first undisplayed tweet\
+    var userTweets = []; //tweets to be displayed on the user page
 
     /**
-     * Generates a pop-up with photos
+     * Generates a pop-up containing a photo
      *
      * @param media_url {String} the url of the image
+     * @param tweetID {Number} the id of the tweet
      * @return <div> element
      */
-    var buildPhotoPopup = function(media_url){
+    var buildPhotoPopup = function(media_url, tweetID){
         var container = $('<div/>', {
             "data-role": "popup",
-            "id": "photobox-tweet" + loadIndex,
+            "id": "photobox-tweet" + tweetID,
             "data-overlay-theme": "a",
             "data-dismissable": "false"
         });
@@ -46,9 +47,10 @@ $(document).ready(function () {
      *
      * @param type {String} the url of the image
      * @param object {Object} contains information about the link
+     * @param tweetID {Number} the id of the tweet
      * @return <a> element
      */
-    var buildLink = function (type, object) {
+    var buildLink = function (type, object, tweetID) {
         var obj;
         if (type == 'hashtag') {
             obj = $('<a/>', {
@@ -73,7 +75,7 @@ $(document).ready(function () {
             });
         } else if (type == 'media') {
             obj = $('<a/>', {
-                "href":'#photobox-tweet' + loadIndex,
+                "href":'#photobox-tweet' + tweetID,
                 "class": "intweet-link intweet-media",
                 "html": object.display_url,
                 "data-rel": "popup",
@@ -95,19 +97,19 @@ $(document).ready(function () {
         //link hashtags
         if (tweetObject.entities.hashtags.length != 0) {
             tweetObject.entities.hashtags.forEach(function (hashtag) {
-                text = text.replace('#' + hashtag.text, buildLink('hashtag', hashtag));
+                text = text.replace('#' + hashtag.text, buildLink('hashtag', hashtag, tweetObject.id));
             })
         }
         // link external urls
         if (tweetObject.entities.urls.length != 0) {
             tweetObject.entities.urls.forEach(function (url) {
-                text = text.replace(url.url, buildLink('url', url));
+                text = text.replace(url.url, buildLink('url', url, tweetObject.id));
             })
         }
         //link user mentions
         if (tweetObject.entities.user_mentions.length != 0) {
             tweetObject.entities.user_mentions.forEach(function (user_mention) {
-                var link = buildLink('user_mention', user_mention);
+                var link = buildLink('user_mention', user_mention, tweetObject.id);
                 text = text.replace('@' + user_mention.screen_name, link);
                 text = text.replace('@' + user_mention.screen_name.toLowerCase(), link);
             })
@@ -115,7 +117,7 @@ $(document).ready(function () {
         //tweetObject.entities.media
         if (tweetObject.entities.media) {
             tweetObject.entities.media.forEach(function (media) {
-                var link = buildLink('media', media);
+                var link = buildLink('media', media, tweetObject.id);
                 text = text.replace(media.url, link);
                 })
         }
@@ -128,6 +130,7 @@ $(document).ready(function () {
      * @param userData {Object} contains information about the user
      */
     var displayUserPage = function(userData) {
+        userTweets = [];
         var avatar = $("<img/>", {
             'src': userData.profile_image_url,
             'id': "avatar"
@@ -141,18 +144,19 @@ $(document).ready(function () {
         var tweetContainer = $("#user-tweets");
         tweetContainer.html("");
 
-        //Display tweets authored by the user
-        for(var i = 0; i < favourites.length; i++) {
-            var tweet = favourites[i];
-            if(tweet.user.id == userData.id) {
-                $(buildTweet(tweet)).appendTo(tweetContainer);
-            }
-        }
-
         //Redirect to the user page
         $.mobile.changePage( "#user-page", { transition: "slide"} );
         $("#user-page").addClass("my-page");
-        tweetContainer.listview('refresh');
+
+        //populate user page with tweets
+        for(var i = 0; i < favourites.length; i++) {
+            var tweet = favourites[i];
+            if(tweet.user.id == userData.id) {
+                userTweets.push(tweet);
+            }
+        }
+        userTweets.index = 0;
+        populate(tweetContainer, userTweets);
     };
 
     /**
@@ -189,48 +193,50 @@ $(document).ready(function () {
 
         //build the media popup if the tweet has expandable content
         if (tweetObject.entities.media){
-            $('.my-page').append(buildPhotoPopup(tweetObject.entities.media[0].media_url)).trigger("create");
+            $('.my-page').append(buildPhotoPopup(tweetObject.entities.media[0].media_url, tweetObject.id)).trigger("create");
         }
         return tweetContainer;
     };
 
     /**
-     * Uses global variables favourites and loadIndex to load the 10 next tweets
-     * into the main display window.
-     * @returns void
+     * Adds 10 tweets to container starting with tweets.index
     */
-    var populateMain = function () {
-
+    var populate = function (container, tweets) {
         var i = 0;
-        while ((loadIndex < favourites.length) && (i < 10)) {
-            var newTweet = buildTweet(favourites[loadIndex]);
-            newTweet.attr('id', loadIndex); // id=index in array to easily build user profile on tweet click
+        while ((tweets.index < tweets.length) && (i < 10)) {
+            var newTweet = buildTweet(tweets[tweets.index]);
+            newTweet.attr('id', tweets.index); // id=index in array to easily build user profile on tweet click
 
-            $(newTweet).appendTo("#tweetList");
+            $(newTweet).appendTo(container);
             i++;
-            loadIndex++;
+            tweets.index++;
 
-            if (loadIndex == favourites.length) {    //will only ever execute once
-                /* var sentinel = "<li id='sentinel'><a href='#'><h2>The End</h2><p>That's all folks!</p></a></li>"  */
-                $('#tweetList').append("<li id='sentinel'><a href=''#'><img src='../img/icecream_star.png'><h2>The End</h2>"
+            if (tweets.index == tweets.length) {    //will only ever execute once
+                $('#tweetList').append("<li id='sentinel'><a href=''#'><img src='img/icecream_star.png'><h2>The End</h2>"
                     + "<p>That's all folks!</p></a></li>");
             }
         }
         //refresh after all the appends instead of after each one
-        $('#tweetList').listview('refresh');
+        container.listview('refresh');
     };
 
     /*Infinite Scroll*/
     $(window).scroll(function () {
         if ($(window).scrollTop() >= $(document).height() - $(window).height() - 232) {
             //load more posts
-            populateMain();
+            if(window.location.hash == "#user-page") {
+                populate($("#user-tweets"), userTweets)
+            }
+            else {
+                populate($("#tweetList"), favourites)
+            }
         }
     });
 
     /*load the tweets from the local file*/
     $.getJSON('./favs.json', function (data) {
         favourites = data;
-        populateMain();
+        favourites.index = 0;
+        populate($("#tweetList"), favourites)
     });
 });

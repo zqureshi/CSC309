@@ -1,15 +1,21 @@
 /**
- * Created with JetBrains WebStorm.
- * User: TigerControl
+ * Authors: Natalie Morcos, Zeeshan Qureshi, Michael Kozakov
  * Date: 27/03/13
  * Time: 11:32 AM
  * To change this template use File | Settings | File Templates.
  */
+
 $(document).ready(function () {
 
     var favourites = []; //will hold JSON
     var loadIndex = 0;   //index first undisplayed tweet\
 
+    /**
+     * Generates a pop-up with photos
+     *
+     * @param media_url {String} the url of the image
+     * @return <div> element
+     */
     var buildPhotoPopup = function(media_url){
         var container = $('<div/>', {
             "data-role": "popup",
@@ -35,6 +41,13 @@ $(document).ready(function () {
     };
 
 
+    /**
+     * Generates a link formatted to follow twitter's standards
+     *
+     * @param type {String} the url of the image
+     * @param object {Object} contains information about the link
+     * @return <a> element
+     */
     var buildLink = function (type, object) {
         var obj;
         if (type == 'hashtag') {
@@ -71,6 +84,12 @@ $(document).ready(function () {
         return obj[0].outerHTML;
     };
 
+    /**
+     * Formats a tweets text to follow twitter standards
+     *
+     * @param tweetObject {Object} contains tweet information
+     * @return {String}
+     */
     var prepareTweetText = function (tweetObject) {
         var text = tweetObject.text;
         //link hashtags
@@ -101,10 +120,43 @@ $(document).ready(function () {
                 })
         }
         return text
-
     };
 
-    /** Takes a tweet object from the JSON array favourites and builds then
+    /**
+     * Populates the user page with information about given user and redirects to that page
+     *
+     * @param userData {Object} contains information about the user
+     */
+    var displayUserPage = function(userData) {
+        var avatar = $("<img/>", {
+            'src': userData.profile_image_url,
+            'id': "avatar"
+        });
+        $("#avatar-container").html(avatar);
+        $("#username-header").text(userData.name);
+        $("#username").text(userData.name);
+        $("#num-following").text(userData.friends_count);
+        $("#num-followers").text(userData.followers_count);
+
+        var tweetContainer = $("#user-tweets");
+        tweetContainer.html("");
+
+        //Display tweets authored by the user
+        for(var i = 0; i < favourites.length; i++) {
+            var tweet = favourites[i];
+            if(tweet.user.id == userData.id) {
+                $(buildTweet(tweet)).appendTo(tweetContainer);
+            }
+        }
+
+        //Redirect to the user page
+        $.mobile.changePage( "#user-page", { transition: "slide"} );
+        $("#user-page").addClass("my-page");
+        tweetContainer.listview('refresh');
+    };
+
+    /**
+     * Takes a tweet object from the JSON array favourites and builds then
      * returns a div containing to relevant information.
      * @param {JSON} tweetObject
      * @returns {*|jQuery|HTMLElement}
@@ -125,7 +177,7 @@ $(document).ready(function () {
         var handler = $('<span/>', {
             'class': 'user-handler',
             'html': '@' + tweetObject.user.screen_name
-        });
+        }).click(function() {displayUserPage(tweetObject.user)});
         var text = $('<p/>', {
             'html': prepareTweetText(tweetObject)
 
@@ -142,7 +194,8 @@ $(document).ready(function () {
         return tweetContainer;
     };
 
-    /** Uses global variables favourites and loadIndex to load the 10 next tweets
+    /**
+     * Uses global variables favourites and loadIndex to load the 10 next tweets
      * into the main display window.
      * @returns void
     */
@@ -158,7 +211,8 @@ $(document).ready(function () {
             loadIndex++;
 
             if (loadIndex == favourites.length) {    //will only ever execute once
-                $('#tweetList').append("<li id='sentinel'><a href=''#'><img src='img/icecream_star.png'><h2>The End</h2>"
+                /* var sentinel = "<li id='sentinel'><a href='#'><h2>The End</h2><p>That's all folks!</p></a></li>"  */
+                $('#tweetList').append("<li id='sentinel'><a href=''#'><img src='../img/icecream_star.png'><h2>The End</h2>"
                     + "<p>That's all folks!</p></a></li>");
             }
         }
@@ -179,18 +233,4 @@ $(document).ready(function () {
         favourites = data;
         populateMain();
     });
-
-    //TODO User Pages
-    /* these are the elements that when clicked, expand user info:
-     <span> class="user-handler"></span>
-     and
-     <img class="ui-li-thumb" src="http://a0.twimg.com/profile_images/282368198
-    the <li> element that each of these is inside has an id # that is the index
-    global array  "favourites" that has the info you need to build the profile
-    */
-
-
-
-
-
 });

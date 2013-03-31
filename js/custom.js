@@ -1,19 +1,26 @@
 /**
- * Created with JetBrains WebStorm.
- * User: TigerControl
+ * Authors: Natalie Morcos, Zeeshan Qureshi, Michael Kozakov
  * Date: 27/03/13
  * Time: 11:32 AM
  * To change this template use File | Settings | File Templates.
  */
+
 $(document).ready(function () {
 
     var favourites = []; //will hold JSON
-    var loadIndex = 0;   //index first undisplayed tweet\
+    var userTweets = []; //tweets to be displayed on the user page
 
-    var buildPhotoPopup = function(media_url){
+    /**
+     * Generates a pop-up containing a photo
+     *
+     * @param media_url {String} the url of the image
+     * @param tweetID {Number} the id of the tweet
+     * @return <div> element
+     */
+    var buildPhotoPopup = function(media_url, tweetID){
         var container = $('<div/>', {
             "data-role": "popup",
-            "id": "photobox-tweet" + loadIndex,
+            "id": "photobox-tweet" + tweetID,
             "data-overlay-theme": "a",
             "data-dismissable": "false"
         });
@@ -35,7 +42,15 @@ $(document).ready(function () {
     };
 
 
-    var buildLink = function (type, object) {
+    /**
+     * Generates a link formatted to follow twitter's standards
+     *
+     * @param type {String} the url of the image
+     * @param object {Object} contains information about the link
+     * @param tweetID {Number} the id of the tweet
+     * @return <a> element
+     */
+    var buildLink = function (type, object, tweetID) {
         var obj;
         if (type == 'hashtag') {
             obj = $('<a/>', {
@@ -60,7 +75,7 @@ $(document).ready(function () {
             });
         } else if (type == 'media') {
             obj = $('<a/>', {
-                "href":'#photobox-tweet' + loadIndex,
+                "href":'#photobox-tweet' + tweetID,
                 "class": "intweet-link intweet-media",
                 "html": object.display_url,
                 "data-rel": "popup",
@@ -71,24 +86,30 @@ $(document).ready(function () {
         return obj[0].outerHTML;
     };
 
+    /**
+     * Formats a tweets text to follow twitter standards
+     *
+     * @param tweetObject {Object} contains tweet information
+     * @return {String}
+     */
     var prepareTweetText = function (tweetObject) {
         var text = tweetObject.text;
         //link hashtags
         if (tweetObject.entities.hashtags.length != 0) {
             tweetObject.entities.hashtags.forEach(function (hashtag) {
-                text = text.replace('#' + hashtag.text, buildLink('hashtag', hashtag));
+                text = text.replace('#' + hashtag.text, buildLink('hashtag', hashtag, tweetObject.id));
             })
         }
         // link external urls
         if (tweetObject.entities.urls.length != 0) {
             tweetObject.entities.urls.forEach(function (url) {
-                text = text.replace(url.url, buildLink('url', url));
+                text = text.replace(url.url, buildLink('url', url, tweetObject.id));
             })
         }
         //link user mentions
         if (tweetObject.entities.user_mentions.length != 0) {
             tweetObject.entities.user_mentions.forEach(function (user_mention) {
-                var link = buildLink('user_mention', user_mention);
+                var link = buildLink('user_mention', user_mention, tweetObject.id);
                 text = text.replace('@' + user_mention.screen_name, link);
                 text = text.replace('@' + user_mention.screen_name.toLowerCase(), link);
             })
@@ -96,15 +117,50 @@ $(document).ready(function () {
         //tweetObject.entities.media
         if (tweetObject.entities.media) {
             tweetObject.entities.media.forEach(function (media) {
-                var link = buildLink('media', media);
+                var link = buildLink('media', media, tweetObject.id);
                 text = text.replace(media.url, link);
                 })
         }
         return text
-
     };
 
-    /** Takes a tweet object from the JSON array favourites and builds then
+    /**
+     * Populates the user page with information about given user and redirects to that page
+     *
+     * @param userData {Object} contains information about the user
+     */
+    var displayUserPage = function(userData) {
+        userTweets = [];
+        var avatar = $("<img/>", {
+            'src': userData.profile_image_url,
+            'id': "avatar"
+        });
+        $("#avatar-container").html(avatar);
+        $("#username-header").text(userData.name);
+        $("#username").text(userData.name);
+        $("#num-following").text(userData.friends_count);
+        $("#num-followers").text(userData.followers_count);
+
+        var tweetContainer = $("#user-tweets");
+        tweetContainer.html("");
+
+        //Redirect to the user page
+        $.mobile.changePage( "#user-page", { transition: "slide"} );
+        $("#user-page").addClass("my-page");
+
+        //populate user page with tweets
+        for(var i = 0; i < favourites.length; i++) {
+            var tweet = favourites[i];
+            if(tweet.user.id == userData.id) {
+                userTweets.push(tweet);
+            }
+        }
+        userTweets.index = 0;
+        populate(tweetContainer, userTweets);
+    };
+
+    /**
+     * Takes a tweet object from the JSON array favourites and builds then
      * returns a div containing to relevant information.
      * @param {JSON} tweetObject
      * @returns {*|jQuery|HTMLElement}
@@ -125,7 +181,7 @@ $(document).ready(function () {
         var handler = $('<span/>', {
             'class': 'user-handler',
             'html': '@' + tweetObject.user.screen_name
-        });
+        }).click(function() {displayUserPage(tweetObject.user)});
         var text = $('<p/>', {
             'html': prepareTweetText(tweetObject)
 
@@ -137,60 +193,50 @@ $(document).ready(function () {
 
         //build the media popup if the tweet has expandable content
         if (tweetObject.entities.media){
-            $('.my-page').append(buildPhotoPopup(tweetObject.entities.media[0].media_url)).trigger("create");
+            $('.my-page').append(buildPhotoPopup(tweetObject.entities.media[0].media_url, tweetObject.id)).trigger("create");
         }
         return tweetContainer;
     };
 
-    /** Uses global variables favourites and loadIndex to load the 10 next tweets
-     * into the main display window.
-     * @returns void
+    /**
+     * Adds 10 tweets to container starting with tweets.index
     */
-    var populateMain = function () {
-
+    var populate = function (container, tweets) {
         var i = 0;
-        while ((loadIndex < favourites.length) && (i < 10)) {
-            var newTweet = buildTweet(favourites[loadIndex]);
-            newTweet.attr('id', loadIndex); // id=index in array to easily build user profile on tweet click
+        while ((tweets.index < tweets.length) && (i < 10)) {
+            var newTweet = buildTweet(tweets[tweets.index]);
+            newTweet.attr('id', tweets.index); // id=index in array to easily build user profile on tweet click
 
-            $(newTweet).appendTo("#tweetList");
+            $(newTweet).appendTo(container);
             i++;
-            loadIndex++;
+            tweets.index++;
 
-            if (loadIndex == favourites.length) {    //will only ever execute once
+            if (tweets.index == tweets.length) {    //will only ever execute once
                 $('#tweetList').append("<li id='sentinel'><a href=''#'><img src='img/icecream_star.png'><h2>The End</h2>"
                     + "<p>That's all folks!</p></a></li>");
             }
         }
         //refresh after all the appends instead of after each one
-        $('#tweetList').listview('refresh');
+        container.listview('refresh');
     };
 
     /*Infinite Scroll*/
     $(window).scroll(function () {
         if ($(window).scrollTop() >= $(document).height() - $(window).height() - 232) {
             //load more posts
-            populateMain();
+            if(window.location.hash == "#user-page") {
+                populate($("#user-tweets"), userTweets)
+            }
+            else {
+                populate($("#tweetList"), favourites)
+            }
         }
     });
 
     /*load the tweets from the local file*/
     $.getJSON('./favs.json', function (data) {
         favourites = data;
-        populateMain();
+        favourites.index = 0;
+        populate($("#tweetList"), favourites)
     });
-
-    //TODO User Pages
-    /* these are the elements that when clicked, expand user info:
-     <span> class="user-handler"></span>
-     and
-     <img class="ui-li-thumb" src="http://a0.twimg.com/profile_images/282368198
-    the <li> element that each of these is inside has an id # that is the index
-    global array  "favourites" that has the info you need to build the profile
-    */
-
-
-
-
-
 });

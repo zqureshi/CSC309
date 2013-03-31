@@ -14,23 +14,57 @@
 
 </head>
 <body>
-    <div data-role="page" data-theme='a' class='my-page'>
+<!-- Start of first page: #one -->
+    <div data-role="page" id="ed" data-theme='a' class='my-page'>
         <div data-role="header" data-position="fixed">
             <h1>That's my Flava</h1>
-                <a href="#infoPopup" data-rel="popup" class="ui-btn-right ui-icon-nodisc" data-iconpos="notext" data-inline="true" style="float:right" data-transition="pop"  data-icon="info">
+            <a href="#infoPopup" data-rel="popup" class="ui-btn-right ui-icon-nodisc" data-iconpos="notext" data-inline="true" style="float:right" data-transition="pop"  data-icon="info">
                 Help
                 </a>
                 <div data-role="popup" data-theme="e"id="infoPopup" class="ui-content" style="max-width:400px;">
-                    <p>This is our info paragraph!</p>  <!--TODO write help blurb-->
+                    <p>These are all the tweets you tagged as favorite!</p>
+                    <p>Click on any user's twitter handle to show his posts </p>
                 </div>
                <!--TODO size this somehow: img src="./img/icecream_star.png"-->
             </div><!----header---->
 
         <div data-role="content">
-              <ul data-role="listview" data-inset="true" id="tweetList"></ul>
+              <ul data-role="listview" data-inset="true" class="tweetList" id="tweetList"></ul>
         </div><!----content---->
 
-    </div><!---page--->
+    </div><!---/page one--->
+
+
+    <!-- Start of second page: #two -->
+    <div data-role="page" id="user-page" data-theme="a" data-add-back-btn="true">
+
+        <div data-role="header">
+           <h1 id="username-header">Two</h1>
+        </div><!-- /header -->
+
+        <div data-role="content" >
+            <div id="user-info" class="user-info">
+                <div id="card">
+                    <div id="avatar-container"></div>
+                    <div id="user-info-text">
+                        <h2 id="username"></h2>
+                        <div id="user-stats">
+                            <div>
+                                <strong id='num-following'></strong> Following
+                            </div>
+                            <div>
+                                <strong id='num-followers'></strong> Followers
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ul data-role="listview" data-inset="true" class="tweetList" id="user-tweets"></ul>
+        </div><!-- /content -->
+    </div><!-- /page two -->
+
+
 </body>
 
 

@@ -17,7 +17,7 @@ $(document).ready(function () {
      * @param tweetID {Number} the id of the tweet
      * @return <div> element
      */
-    var buildPhotoPopup = function(media_url, tweetID){
+    var buildPhotoPopup = function (media_url, tweetID) {
 
         var container = $('<div/>', {
             "data-role": "popup",
@@ -34,9 +34,11 @@ $(document).ready(function () {
             "data-iconpos": "notext",
             "class": "ui-btn-right",
             "html": "Close"
-        }).click(function() {doSomething(container)});
+        }).click(function () {
+                doSomething(container)
+            });
 
-        var img = $('<img/>',{
+        var img = $('<img/>', {
             "src": media_url
         });
         container.append(close, img);
@@ -77,12 +79,12 @@ $(document).ready(function () {
             });
         } else if (type == 'media') {
             obj = $('<a/>', {
-                "href":'#photobox-tweet' + tweetID,
+                "href": '#photobox-tweet' + tweetID,
                 "class": "intweet-link intweet-media",
                 "html": object.display_url,
                 "data-rel": "popup",
                 "data-position-to": "window",
-                "data-transition" : "fade"
+                "data-transition": "fade"
             });
         }
         return obj[0].outerHTML;
@@ -121,7 +123,7 @@ $(document).ready(function () {
             tweetObject.entities.media.forEach(function (media) {
                 var link = buildLink('media', media, tweetObject.id);
                 text = text.replace(media.url, link);
-                })
+            })
         }
         return text
     };
@@ -130,21 +132,20 @@ $(document).ready(function () {
      * @param created_at
      * @returns {string}
      */
-    var prepareDate = function(created_at){
+    var prepareDate = function (created_at) {
         var tokens = created_at.split(" ");
-        var time = tokens[3].slice(0,5);
-        console.log(time)
-        var hour = parseInt(time.slice(0,2));
-        if(hour == 12){
+        var time = tokens[3].slice(0, 5);
+        var hour = parseInt(time.slice(0, 2));
+        if (hour == 12) {
             time = time + ' PM - ';
-        } else if (hour == 00){
+        } else if (hour == 0) {
             time = "12" + time.slice(2) + ' AM - ';
-        } else if (hour > 11){
+        } else if (hour > 11) {
             time = (hour - 12) + time.slice(2) + ' PM - ';
-        } else{
+        } else {
             time = time + ' AM - ';
         }
-        return time + tokens[1] + '. ' +  tokens[2] + ', ' + tokens[5];
+        return time + tokens[1] + '. ' + tokens[2] + ', ' + tokens[5];
     };
 
     /**
@@ -152,7 +153,7 @@ $(document).ready(function () {
      *
      * @param userData {Object} contains information about the user
      */
-    var displayUserPage = function(userData) {
+    var displayUserPage = function (userData) {
         userTweets = [];
         var avatar = $("<img/>", {
             'src': userData.profile_image_url,
@@ -168,13 +169,13 @@ $(document).ready(function () {
         tweetContainer.html("");
 
         //Redirect to the user page
-        $.mobile.changePage( "#user-page", { transition: "slide"} );
+        $.mobile.changePage("#user-page", { transition: "slide"});
         $("#user-page").addClass("my-page");
 
         //populate user page with tweets
-        for(var i = 0; i < favourites.length; i++) {
+        for (var i = 0; i < favourites.length; i++) {
             var tweet = favourites[i];
-            if(tweet.user.id == userData.id) {
+            if (tweet.user.id == userData.id) {
                 userTweets.push(tweet);
             }
         }
@@ -208,7 +209,9 @@ $(document).ready(function () {
         var handler = $('<span/>', {
             'class': 'user-handler',
             'html': '@' + tweetObject.user.screen_name
-        }).click(function() {displayUserPage(tweetObject.user)});
+        }).click(function () {
+                displayUserPage(tweetObject.user)
+            });
         var text = $('<p/>', {
             'html': prepareTweetText(tweetObject)
 
@@ -219,7 +222,7 @@ $(document).ready(function () {
         tweetContainer.append(link);
 
         //build the media popup if the tweet has expandable content
-        if (tweetObject.entities.media){
+        if (tweetObject.entities.media) {
             $('.my-page').append(buildPhotoPopup(tweetObject.entities.media[0].media_url, tweetObject.id)).trigger("create");
         }
         return tweetContainer;
@@ -227,7 +230,7 @@ $(document).ready(function () {
 
     /**
      * Adds 10 tweets to container starting with tweets.index
-    */
+     */
     var populate = function (container, tweets, firstView) {
         var i = 0;
         while ((tweets.index < tweets.length) && (i < 10)) {
@@ -251,7 +254,7 @@ $(document).ready(function () {
     $(window).scroll(function () {
         if ($(window).scrollTop() >= $(document).height() - $(window).height() - 245) {
             //load more posts
-            if(window.location.hash == "#user-page") {
+            if (window.location.hash == "#user-page") {
                 populate($("#user-tweets"), userTweets)
             }
             else {

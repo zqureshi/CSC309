@@ -206,7 +206,7 @@ $(document).ready(function () {
             'class': 'ui-li-aside',
             'html': prepareDate(tweetObject.created_at)
         });
-        var handler = $('<span/>', {
+        var handler = $('<span  />', {
             'class': 'user-handler',
             'html': '@' + tweetObject.user.screen_name
         }).click(function () {

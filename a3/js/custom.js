@@ -18,6 +18,7 @@ $(document).ready(function () {
      * @return <div> element
      */
     var buildPhotoPopup = function(media_url, tweetID){
+
         var container = $('<div/>', {
             "data-role": "popup",
             "id": "photobox-tweet" + tweetID,
@@ -33,7 +34,8 @@ $(document).ready(function () {
             "data-iconpos": "notext",
             "class": "ui-btn-right",
             "html": "Close"
-        });
+        }).click(function() {doSomething(container)});
+
         var img = $('<img/>',{
             "src": media_url
         });
@@ -124,6 +126,23 @@ $(document).ready(function () {
         return text
     };
 
+    var prepareDate = function(created_at){
+        var tokens = created_at.split(" ");
+        var time = tokens[3].slice(0,5);
+        console.log(time)
+        var hour = parseInt(time.slice(0,2));
+        if(hour == 12){
+            time = time + ' PM - ';
+        } else if (hour == 00){
+            time = "12" + time.slice(2) + ' AM - ';
+        } else if (hour > 11){
+            time = (hour - 12) + time.slice(2) + ' PM - ';
+        } else{
+            time = time + ' AM - ';
+        }
+        return time + tokens[1] + '. ' +  tokens[2] + ', ' + tokens[5];
+    };
+
     /**
      * Populates the user page with information about given user and redirects to that page
      *
@@ -178,6 +197,10 @@ $(document).ready(function () {
         var name = $('<h2/>', {
             'html': tweetObject.user.name + " "
         });
+        var date = $('<p/>', {
+            'class': 'ui-li-aside',
+            'html': prepareDate(tweetObject.created_at)
+        });
         var handler = $('<span/>', {
             'class': 'user-handler',
             'html': '@' + tweetObject.user.screen_name
@@ -188,7 +211,7 @@ $(document).ready(function () {
         });
 
         name.append(handler);
-        link.append(img, name, text);
+        link.append(img, name, text, date);
         tweetContainer.append(link);
 
         //build the media popup if the tweet has expandable content
@@ -222,7 +245,7 @@ $(document).ready(function () {
 
     /*Infinite Scroll*/
     $(window).scroll(function () {
-        if ($(window).scrollTop() >= $(document).height() - $(window).height() - 232) {
+        if ($(window).scrollTop() >= $(document).height() - $(window).height() - 245) {
             //load more posts
             if(window.location.hash == "#user-page") {
                 populate($("#user-tweets"), userTweets)

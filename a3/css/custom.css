@@ -126,7 +126,7 @@ text-shadow: 0.5px 0.5px #387bbe;
     .my-page .ui-listview .ui-li.ui-btn {
         float: left;
         width: 46%; /* 33.3333% incl. 2 x 1.2% margin */
-        height: 232px;
+        height: 245px;
         margin: 9px 1.2%;
         border-width: 0; /* The 1px border would break the layout so we set it on .ui-btn-inner instead. */
     }
@@ -158,8 +158,8 @@ text-shadow: 0.5px 0.5px #387bbe;
     }
     .my-page .ui-listview .ui-li-thumb {
         margin: auto;
-        max-height: 80%;
-        max-width: 50%;
+        max-height: 74%;
+        max-width: 51%;
         right: -35%;
         top: 15px;
         width: auto;
@@ -169,7 +169,7 @@ text-shadow: 0.5px 0.5px #387bbe;
     /* Semi transparent background on tweet text, some positioning */
     .ui-listview .ui-li-has-thumb .ui-li-desc {
         background: #6a6a6a;
-        background: rgba(0,0,0,.8);
+            background: rgba(0,0,0,.8);
         background-clip: padding-box;
     }
 
@@ -191,7 +191,7 @@ text-shadow: 0.5px 0.5px #387bbe;
      }
 
     .ui-listview .ui-li-has-thumb .ui-li-desc {
-        bottom: 10px;
+        bottom: 23px;
         left: 0;
         line-height: 1.5;
         margin: 0;
@@ -218,6 +218,19 @@ text-shadow: 0.5px 0.5px #387bbe;
         text-align: center;
         font-size: 200%;
     }
+    /* ui-li-aside has class .ui-li-desc as well so we have to override some things. */
+    .my-page .ui-listview .ui-li-desc.ui-li-aside {
+        background: none repeat scroll 0 0 transparent;
+        border-bottom-right-radius: inherit;
+        border-top-left-radius: inherit;
+        bottom: 0;
+        color: #C0C0C0;
+        left: auto;
+        min-height: 0;
+        padding: 2px 10px;
+        width: auto;
+        z-index: 1;
+    }
 }
 /*3 columns*/
 @media all and (min-width: 1150px){
@@ -227,4 +240,3 @@ text-shadow: 0.5px 0.5px #387bbe;
         border-width: 0; /* The 1px border would break the layout so we set it on .ui-btn-inner instead. */
     }
 }
-

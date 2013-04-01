@@ -125,7 +125,11 @@ $(document).ready(function () {
         }
         return text
     };
-
+    /**Formats the date string to display with the tweet.
+     *
+     * @param created_at
+     * @returns {string}
+     */
     var prepareDate = function(created_at){
         var tokens = created_at.split(" ");
         var time = tokens[3].slice(0,5);
@@ -224,7 +228,7 @@ $(document).ready(function () {
     /**
      * Adds 10 tweets to container starting with tweets.index
     */
-    var populate = function (container, tweets) {
+    var populate = function (container, tweets, firstView) {
         var i = 0;
         while ((tweets.index < tweets.length) && (i < 10)) {
             var newTweet = buildTweet(tweets[tweets.index]);
@@ -234,7 +238,7 @@ $(document).ready(function () {
             i++;
             tweets.index++;
 
-            if (tweets.index == tweets.length) {    //will only ever execute once
+            if (firstView && tweets.index == tweets.length) {  //will not add sentinel on "back"
                 $('#tweetList').append("<li id='sentinel'><a href=''#'><img src='img/icecream_star.png'><h2>The End</h2>"
                     + "<p>That's all folks!</p></a></li>");
             }
@@ -251,7 +255,7 @@ $(document).ready(function () {
                 populate($("#user-tweets"), userTweets)
             }
             else {
-                populate($("#tweetList"), favourites)
+                populate($("#tweetList"), favourites, true)
             }
         }
     });
@@ -260,6 +264,6 @@ $(document).ready(function () {
     $.getJSON('./favs.json', function (data) {
         favourites = data;
         favourites.index = 0;
-        populate($("#tweetList"), favourites)
+        populate($("#tweetList"), favourites, true)
     });
 });

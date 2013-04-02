@@ -1,4 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title></title>
@@ -15,36 +16,45 @@
 </head>
 <body>
 <!-- Start of first page: #one -->
-    <div data-role="page" id="ed" data-theme='a' class='my-page'>
-        <div data-role="header" data-position="fixed">
-            <h1>That's my Flava</h1>
-            <a href="#infoPopup" data-rel="popup" class="ui-btn-right ui-icon-nodisc" data-iconpos="notext" data-inline="true" style="float:right" data-transition="pop"  data-icon="info">
-                Help
-                </a>
-                <div data-role="popup" data-theme="e"id="infoPopup" class="ui-content" style="max-width:400px;">
-                    <p>These are all the tweets you tagged as favorite!</p>
-                    <p>Click on any user's twitter handle to show his posts </p>
-                </div>
-               <!--TODO size this somehow: img src="./img/icecream_star.png"-->
-            </div><!----header---->
+<div data-role="page" id="ed" data-theme='a' class='my-page'>
+    <div data-role="header" data-position="fixed">
+        <h1>That's my Flava</h1>
+        <a href="#infoPopup" data-rel="popup" class="ui-btn-right ui-icon-nodisc" data-iconpos="notext"
+           data-inline="true" style="float:right" data-transition="pop" data-icon="info">
+            Help
+        </a>
 
-        <div data-role="content">
-              <ul data-role="listview" data-inset="true" class="tweetList" id="tweetList"></ul>
-        </div><!----content---->
+        <div data-role="popup" data-theme="c" id="infoPopup" class="ui-content">
+            <p>These are all the tweets you tagged as favorites!</p>
 
-    </div><!---/page one--->
+            <p>Click on links to expand them in a new tab,
+                click on images to expand them in window, and click on the twitter handle of the tweet's author
+                to find out more about them and see more of his or her posts.</p>
+        </div>
+    </div>
+    <!----header---->
+
+    <div data-role="content">
+        <ul data-role="listview" data-inset="true" class="tweetList" id="tweetList"></ul>
+    </div>
+    <!----content---->
+
+</div>
+<!---/page one--->
 
 
-    <!-- Start of second page: #two -->
-    <div data-role="page" id="user-page" data-theme="a" data-add-back-btn="true">
+<!-- Start of second page: #two -->
+<div data-role="page" id="user-page" data-theme="a" data-add-back-btn="true">
 
-        <div data-role="header">
-           <h1 id="username-header">Two</h1>
-        </div><!-- /header -->
+    <div data-role="header" data-position="fixed">
+        <h1 id="username-header">Two</h1>
+    </div>
+    <!-- /header -->
 
-        <div data-role="content" >
-            <div id="user-info" class="user-info">
-                <div id="card">
+    <div data-role="content">
+        <div id="user-info" class="user-info">
+            <div id="card">
+                <div id="card-top">
                     <div id="avatar-container"></div>
                     <div id="user-info-text">
                         <h2 id="username"></h2>
@@ -58,11 +68,18 @@
                         </div>
                     </div>
                 </div>
+                <div id="card-bottom">
+                    <div id="bio"></div>
+                    <a id="user-url" href=""></a>
+                </div>
             </div>
+        </div>
 
-            <ul data-role="listview" data-inset="true" class="tweetList" id="user-tweets"></ul>
-        </div><!-- /content -->
-    </div><!-- /page two -->
+        <ul data-role="listview" data-inset="true" class="tweetList" id="user-tweets"></ul>
+    </div>
+    <!-- /content -->
+</div>
+<!-- /page two -->
 
 
 </body>

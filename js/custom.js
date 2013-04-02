@@ -5,8 +5,12 @@
  * To change this template use File | Settings | File Templates.
  */
 
-$(document).ready(function () {
+//prevent the user from entering the user page manually
+if (window.location.hash == "#user-page") {
+    window.location = window.location.pathname;
+}
 
+$(document).ready(function () {
     var favourites = []; //will hold JSON
     var userTweets = []; //tweets to be displayed on the user page
 
@@ -17,7 +21,8 @@ $(document).ready(function () {
      * @param tweetID {Number} the id of the tweet
      * @return <div> element
      */
-    var buildPhotoPopup = function(media_url, tweetID){
+    var buildPhotoPopup = function (media_url, tweetID) {
+
         var container = $('<div/>', {
             "data-role": "popup",
             "id": "photobox-tweet" + tweetID,
@@ -34,7 +39,8 @@ $(document).ready(function () {
             "class": "ui-btn-right",
             "html": "Close"
         });
-        var img = $('<img/>',{
+
+        var img = $('<img/>', {
             "src": media_url
         });
         container.append(close, img);
@@ -75,12 +81,12 @@ $(document).ready(function () {
             });
         } else if (type == 'media') {
             obj = $('<a/>', {
-                "href":'#photobox-tweet' + tweetID,
+                "href": '#photobox-tweet' + tweetID,
                 "class": "intweet-link intweet-media",
                 "html": object.display_url,
                 "data-rel": "popup",
                 "data-position-to": "window",
-                "data-transition" : "fade"
+                "data-transition": "fade"
             });
         }
         return obj[0].outerHTML;
@@ -119,9 +125,29 @@ $(document).ready(function () {
             tweetObject.entities.media.forEach(function (media) {
                 var link = buildLink('media', media, tweetObject.id);
                 text = text.replace(media.url, link);
-                })
+            })
         }
         return text
+    };
+    /**Formats the date string to display with the tweet.
+     *
+     * @param created_at
+     * @returns {string}
+     */
+    var prepareDate = function (created_at) {
+        var tokens = created_at.split(" ");
+        var time = tokens[3].slice(0, 5);
+        var hour = parseInt(time.slice(0, 2));
+        if (hour == 12) {
+            time = time + ' PM - ';
+        } else if (hour == 0) {
+            time = "12" + time.slice(2) + ' AM - ';
+        } else if (hour > 11) {
+            time = (hour - 12) + time.slice(2) + ' PM - ';
+        } else {
+            time = time + ' AM - ';
+        }
+        return time + tokens[1] + '. ' + tokens[2] + ', ' + tokens[5];
     };
 
     /**
@@ -129,7 +155,7 @@ $(document).ready(function () {
      *
      * @param userData {Object} contains information about the user
      */
-    var displayUserPage = function(userData) {
+    var displayUserPage = function (userData) {
         userTweets = [];
         var avatar = $("<img/>", {
             'src': userData.profile_image_url,
@@ -140,18 +166,29 @@ $(document).ready(function () {
         $("#username").text(userData.name);
         $("#num-following").text(userData.friends_count);
         $("#num-followers").text(userData.followers_count);
+        userData.description && $("#bio").html(linkify(userData.description));
+
+        var expandedURL = userData.url;
+        if(expandedURL && userData.entities.url.urls && userData.entities.url.urls[0].expanded_url) {
+            expandedURL = userData.entities.url.urls[0].expanded_url;
+        }
+
+        $("#user-url").attr({
+            "href": userData["url"],
+            "class": "intweet-link"
+        }).html(expandedURL);
 
         var tweetContainer = $("#user-tweets");
         tweetContainer.html("");
 
         //Redirect to the user page
-        $.mobile.changePage( "#user-page", { transition: "slide"} );
+        $.mobile.changePage("#user-page", { transition: "slide"});
         $("#user-page").addClass("my-page");
 
         //populate user page with tweets
-        for(var i = 0; i < favourites.length; i++) {
+        for (var i = 0; i < favourites.length; i++) {
             var tweet = favourites[i];
-            if(tweet.user.id == userData.id) {
+            if (tweet.user.id == userData.id) {
                 userTweets.push(tweet);
             }
         }
@@ -174,25 +211,33 @@ $(document).ready(function () {
         });
         var img = $('<img/>', {
             'src': tweetObject.user.profile_image_url
-        });
+        }).click(function () {
+                displayUserPage(tweetObject.user)
+            }).css("cursor", "pointer");
         var name = $('<h2/>', {
-            'html': tweetObject.user.name + " "
+            'html': tweetObject.user.name.replace(' ', '&nbsp;') + " "
         });
-        var handler = $('<span/>', {
+        var date = $('<p/>', {
+            'class': 'ui-li-aside',
+            'html': prepareDate(tweetObject.created_at)
+        });
+        var handler = $('<span  />', {
             'class': 'user-handler',
             'html': '@' + tweetObject.user.screen_name
-        }).click(function() {displayUserPage(tweetObject.user)});
+        }).click(function () {
+                displayUserPage(tweetObject.user)
+            });
         var text = $('<p/>', {
             'html': prepareTweetText(tweetObject)
 
         });
 
         name.append(handler);
-        link.append(img, name, text);
+        link.append(img, name, text, date);
         tweetContainer.append(link);
 
         //build the media popup if the tweet has expandable content
-        if (tweetObject.entities.media){
+        if (tweetObject.entities.media) {
             $('.my-page').append(buildPhotoPopup(tweetObject.entities.media[0].media_url, tweetObject.id)).trigger("create");
         }
         return tweetContainer;
@@ -200,8 +245,8 @@ $(document).ready(function () {
 
     /**
      * Adds 10 tweets to container starting with tweets.index
-    */
-    var populate = function (container, tweets) {
+     */
+    var populate = function (container, tweets, firstView) {
         var i = 0;
         while ((tweets.index < tweets.length) && (i < 10)) {
             var newTweet = buildTweet(tweets[tweets.index]);
@@ -211,7 +256,7 @@ $(document).ready(function () {
             i++;
             tweets.index++;
 
-            if (tweets.index == tweets.length) {    //will only ever execute once
+            if (firstView && tweets.index == tweets.length) {  //will not add sentinel on "back"
                 $('#tweetList').append("<li id='sentinel'><a href=''#'><img src='img/icecream_star.png'><h2>The End</h2>"
                     + "<p>That's all folks!</p></a></li>");
             }
@@ -222,21 +267,38 @@ $(document).ready(function () {
 
     /*Infinite Scroll*/
     $(window).scroll(function () {
-        if ($(window).scrollTop() >= $(document).height() - $(window).height() - 232) {
+        if ($(window).scrollTop() >= $(document).height() - $(window).height() - 245) {
             //load more posts
-            if(window.location.hash == "#user-page") {
+            if (window.location.hash == "#user-page") {
                 populate($("#user-tweets"), userTweets)
             }
             else {
-                populate($("#tweetList"), favourites)
+                populate($("#tweetList"), favourites, true)
             }
         }
     });
 
     /*load the tweets from the local file*/
-    $.getJSON('./favs.json', function (data) {
+    $.getJSON('./favs_large.json', function (data) {
         favourites = data;
         favourites.index = 0;
-        populate($("#tweetList"), favourites)
+        populate($("#tweetList"), favourites, true)
     });
+
+    function linkify(text) {
+        text = text.replace(/(https?:\/\/\S+)/gi, function (s) {
+            return '<a class="intweet-link" href="' + s + '">' + s + '</a>';
+        });
+
+        text = text.replace(/(^|)@(\w+)/gi, function (s) {
+            return '<a class="intweet-link" href="http://twitter.com/' + s + '">' + s + '</a>';
+        });
+
+        text = text.replace(/(^|)#(\w+)/gi, function (s) {
+            return '<a class="intweet-link" href="http://search.twitter.com/search?q=' + s.replace(/#/,'%23') + '">' + s + '</a>';
+        });
+
+        return text;
+    }
+
 });

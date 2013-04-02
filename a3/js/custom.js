@@ -277,7 +277,7 @@ $(document).ready(function () {
     });
 
     /*load the tweets from the local file*/
-    $.getJSON('./favs.json', function (data) {
+    $.getJSON('./favs_large.json', function (data) {
         favourites = data;
         favourites.index = 0;
         populate($("#tweetList"), favourites, true)

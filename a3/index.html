@@ -46,7 +46,7 @@
 <!-- Start of second page: #two -->
 <div data-role="page" id="user-page" data-theme="a" data-add-back-btn="true">
 
-    <div data-role="header">
+    <div data-role="header" data-position="fixed">
         <h1 id="username-header">Two</h1>
     </div>
     <!-- /header -->
@@ -54,18 +54,23 @@
     <div data-role="content">
         <div id="user-info" class="user-info">
             <div id="card">
-                <div id="avatar-container"></div>
-                <div id="user-info-text">
-                    <h2 id="username"></h2>
-
-                    <div id="user-stats">
-                        <div>
-                            <strong id='num-following'></strong> Following
-                        </div>
-                        <div>
-                            <strong id='num-followers'></strong> Followers
+                <div id="card-top">
+                    <div id="avatar-container"></div>
+                    <div id="user-info-text">
+                        <h2 id="username"></h2>
+                        <div id="user-stats">
+                            <div>
+                                <strong id='num-following'></strong> Following
+                            </div>
+                            <div>
+                                <strong id='num-followers'></strong> Followers
+                            </div>
                         </div>
                     </div>
+                </div>
+                <div id="card-bottom">
+                    <div id="bio"></div>
+                    <a id="user-url" href=""></a>
                 </div>
             </div>
         </div>

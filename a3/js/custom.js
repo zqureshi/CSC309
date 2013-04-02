@@ -38,9 +38,7 @@ $(document).ready(function () {
             "data-iconpos": "notext",
             "class": "ui-btn-right",
             "html": "Close"
-        }).click(function () {
-                doSomething(container)
-            });
+        });
 
         var img = $('<img/>', {
             "src": media_url
@@ -168,6 +166,17 @@ $(document).ready(function () {
         $("#username").text(userData.name);
         $("#num-following").text(userData.friends_count);
         $("#num-followers").text(userData.followers_count);
+        userData.description && $("#bio").html(linkify(userData.description));
+
+        var expandedURL = userData.url;
+        if(expandedURL && userData.entities.url.urls && userData.entities.url.urls[0].expanded_url) {
+            expandedURL = userData.entities.url.urls[0].expanded_url;
+        }
+
+        $("#user-url").attr({
+            "href": userData["url"],
+            "class": "intweet-link"
+        }).html(expandedURL);
 
         var tweetContainer = $("#user-tweets");
         tweetContainer.html("");
@@ -273,4 +282,21 @@ $(document).ready(function () {
         favourites.index = 0;
         populate($("#tweetList"), favourites, true)
     });
+
+    function linkify(text) {
+        text = text.replace(/(https?:\/\/\S+)/gi, function (s) {
+            return '<a class="intweet-link" href="' + s + '">' + s + '</a>';
+        });
+
+        text = text.replace(/(^|)@(\w+)/gi, function (s) {
+            return '<a class="intweet-link" href="http://twitter.com/' + s + '">' + s + '</a>';
+        });
+
+        text = text.replace(/(^|)#(\w+)/gi, function (s) {
+            return '<a class="intweet-link" href="http://search.twitter.com/search?q=' + s.replace(/#/,'%23') + '">' + s + '</a>';
+        });
+
+        return text;
+    }
+
 });

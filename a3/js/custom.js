@@ -211,7 +211,9 @@ $(document).ready(function () {
         });
         var img = $('<img/>', {
             'src': tweetObject.user.profile_image_url
-        });
+        }).click(function () {
+                displayUserPage(tweetObject.user)
+            }).css("cursor", "pointer");
         var name = $('<h2/>', {
             'html': tweetObject.user.name.replace(' ', '&nbsp;') + " "
         });

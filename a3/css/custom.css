@@ -143,8 +143,8 @@ a.ui-link-inherit {
     width: 80px;
     max-height: none;
     max-width: none;
-    border-radius: 10px;
-    -moz-border-radius: 10px; /* Old Firefox */
+    border-radius: 5px;
+    -moz-border-radius: 5px; /* Old Firefox */
     top: calc(50% - 50px);
     margin:10px;
 }

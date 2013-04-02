@@ -97,8 +97,9 @@ a.ui-link-inherit {
 
 /*special dimensions for sentinel image*/
 #sentinel img {
-    height: auto;
-    width: 100px;
+    height: 100px;
+    width: auto;
+    margin-left: 22px;
 }
 
 #sentinel {
@@ -118,7 +119,7 @@ a.ui-link-inherit {
 
 /*tweet text colour*/
 .my-page .ui-li-desc {
-    color: #c0c0c0;
+    color: #a5a5a5;
 }
 
 .my-page .ui-listview .ui-li.ui-btn {
@@ -138,9 +139,14 @@ a.ui-link-inherit {
 }
 
 .ui-li-thumb {
-    height: 100%;
-    max-height: 100%;
-    max-width: 100px;
+    height: 80px;
+    width: 80px;
+    max-height: none;
+    max-width: none;
+    border-radius: 10px;
+    -moz-border-radius: 10px; /* Old Firefox */
+    top: calc(50% - 50px);
+    margin:10px;
 }
 
 .my-page .ui-listview .ui-li-desc.ui-li-aside {
@@ -162,8 +168,8 @@ a.ui-link-inherit {
     .my-page .ui-listview .ui-li.ui-btn {
         float: left;
         width: 46%; /* 33.3333% incl. 2 x 1.2% margin */
-        height: 245px;
-        margin: 9px 1.2%;
+        height: 232px;
+        margin: 9px 2%;
         border-width: 0; /* The 1px border would break the layout so we set it on .ui-btn-inner instead. */
     }
 
@@ -198,13 +204,11 @@ a.ui-link-inherit {
     }
 
     .my-page .ui-listview .ui-li-thumb {
-        margin: auto;
-        max-height: 74%;
-        max-width: 51%;
-        right: -35%;
-        top: 15px;
-        width: auto;
-        z-index: -1;
+        height: 100px;
+        left: 60%;
+        top: 15px !important;
+        width: 100px;
+
     }
 
     .ui-li-has-thumb .ui-btn-inner a.ui-link-inherit,
@@ -220,14 +224,14 @@ a.ui-link-inherit {
     }
 
     .ui-listview .ui-li-has-thumb .ui-li-heading {
-        /*   background: none repeat scroll 0 0 rgba(0, 0, 0, 0.8);*/
         border-radius: inherit;
-        padding: 10px;
+        bottom: 125px;
+        font-size: 130%;
+        left: 0;
         position: absolute;
+        right: 40%;
         text-align: center;
-        max-width: 50%;
-        top: 15px;
-        z-index: 1;
+        top: 25px;
 
     }
 
@@ -276,7 +280,7 @@ a.ui-link-inherit {
 }
 
 /*3 columns*/
-@media all and (min-width: 1150px) {
+@media all and (min-width: 1080px) {
     .my-page .ui-listview .ui-li.ui-btn {
         width: 30%; /* 33.3333% incl. 2 x 1.2% margin */
         margin: 9px 1.2%;

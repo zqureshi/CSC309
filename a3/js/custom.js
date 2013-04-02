@@ -200,7 +200,7 @@ $(document).ready(function () {
             'src': tweetObject.user.profile_image_url
         });
         var name = $('<h2/>', {
-            'html': tweetObject.user.name + " "
+            'html': tweetObject.user.name.replace(' ', '&nbsp;') + " "
         });
         var date = $('<p/>', {
             'class': 'ui-li-aside',

@@ -5,8 +5,12 @@
  * To change this template use File | Settings | File Templates.
  */
 
-$(document).ready(function () {
+//prevent the user from entering the user page manually
+if (window.location.hash == "#user-page") {
+    window.location = window.location.pathname;
+}
 
+$(document).ready(function () {
     var favourites = []; //will hold JSON
     var userTweets = []; //tweets to be displayed on the user page
 
